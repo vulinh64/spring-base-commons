@@ -1,4 +1,4 @@
-package com.vulinh.data.entity;
+package com.vulinh.data.base;
 
 import com.vulinh.data.Identifiable;
 import java.io.Serializable;
