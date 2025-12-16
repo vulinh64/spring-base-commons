@@ -1,6 +1,6 @@
 package com.vulinh.data.event;
 
-import com.vulinh.data.UuidIdentifiable;
+import com.vulinh.data.base.UuidIdentifiable;
 import java.util.Objects;
 import java.util.UUID;
 

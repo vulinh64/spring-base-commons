@@ -1,6 +1,5 @@
 package com.vulinh.data.base;
 
-import com.vulinh.data.Identifiable;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,7 +13,7 @@ import org.hibernate.proxy.HibernateProxy;
  * href="https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/">Guide
  * on How to Implement JPA Entities equals() and hashCode()</a> for more information.
  */
-public abstract class AbstractIdentifiable<I extends Serializable>
+public abstract class AbstractEntity<I extends Serializable>
     implements Identifiable<I>, Serializable {
 
   // Bruh
@@ -35,7 +34,7 @@ public abstract class AbstractIdentifiable<I extends Serializable>
     return id != null
         && other != null
         && getEffectiveClass(this) == getEffectiveClass(other)
-        && other instanceof AbstractIdentifiable<?> ai
+        && other instanceof AbstractEntity<?> ai
         && Objects.equals(id, ai.getId());
   }
 

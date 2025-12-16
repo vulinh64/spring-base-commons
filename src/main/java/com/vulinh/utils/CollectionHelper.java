@@ -1,12 +1,13 @@
 package com.vulinh.utils;
 
-import com.vulinh.data.Identifiable;
+import com.vulinh.data.base.Identifiable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// To not conflict with other CollectionUtils from common libraries
 public class CollectionHelper {
 
   private CollectionHelper() {}
