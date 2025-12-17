@@ -21,6 +21,8 @@
         <spring-boot-starter-data-jpa.version>3.5.8</spring-boot-starter-data-jpa.version>
         <hibernate.version>6.6.36.Final</hibernate.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
+        <p6spy.version>3.9.1</p6spy.version>
+        <slf4j-api.version>2.0.17</slf4j-api.version>
     </properties>
 
     <dependencies>
@@ -40,6 +42,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>${p6spy.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
