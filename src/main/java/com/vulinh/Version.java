@@ -8,5 +8,5 @@ final class Version {
   // No instantiation
   private Version() {}
 
-  static final String VERSION = "2.3.0-SNAPSHOT-1";
+  static final String VERSION = "2.3.0-SNAPSHOT-2";
 }
