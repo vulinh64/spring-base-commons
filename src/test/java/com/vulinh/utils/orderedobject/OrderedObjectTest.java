@@ -1,0 +1,146 @@
+package com.vulinh.utils.orderedobject;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.vulinh.utils.orderedobject.OrderedObject.Wrapper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.IntStream;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class OrderedObjectTest {
+
+  record TestUser(int id, String name, int age) {}
+
+  static final List<TestUser> TEST_LIST =
+      List.of(
+          new TestUser(1, null, 23),
+          new TestUser(2, "Bob", 30),
+          new TestUser(3, "Alice", 29),
+          new TestUser(4, "Clive", 27),
+          new TestUser(5, "Alice", 25));
+
+  @Test
+  @DisplayName(
+      "When sorting with ascending order and nulls first, items should be sorted alphabetically with nulls at beginning")
+  void testAscendingNullFirstName() {
+    // Expected order: 1, 3, 5, 2, 4
+    var result = buildResult(SortingOrder.ASCENDING, NullsOrder.NULLS_FIRST);
+
+    assertCorrectOrder(result, 1, 3, 5, 2, 4);
+  }
+
+  @Test
+  @DisplayName(
+      "When sorting with ascending order and nulls last, items should be sorted alphabetically with nulls at end")
+  void testAscendingNullLastName() {
+    // Expected order: 3, 5, 2, 4, 1
+    var result = buildResult(SortingOrder.ASCENDING, NullsOrder.NULLS_LAST);
+
+    assertCorrectOrder(result, 3, 5, 2, 4, 1);
+  }
+
+  @Test
+  @DisplayName(
+      "When sorting with descending order and nulls first, items should be sorted reverse alphabetically with nulls at beginning")
+  void testDescendingNullFirstName() {
+    // Expected order: 1, 4, 2, 5, 3
+    var result = buildResult(SortingOrder.DESCENDING, NullsOrder.NULLS_FIRST);
+
+    assertCorrectOrder(result, 1, 4, 2, 5, 3);
+  }
+
+  @Test
+  @DisplayName(
+      "When sorting with descending order and nulls last, items should be sorted reverse alphabetically with nulls at end")
+  void testDescendingNullLastName() {
+    // Expected order: 4, 2, 5, 3, 1
+    var result = buildResult(SortingOrder.DESCENDING, NullsOrder.NULLS_LAST);
+
+    assertCorrectOrder(result, 4, 2, 5, 3, 1);
+  }
+
+  @Test
+  @DisplayName("Default firstCompareByNaturalOrder should sort ascending with nulls last")
+  void testNormalAsAscendingNullLast() {
+    var result =
+        IntStream.range(0, TEST_LIST.size())
+            .mapToObj(i -> Wrapper.wrap(TEST_LIST.get(i), i))
+            .sorted(Wrapper.firstCompareByNaturalOrder(TestUser::name))
+            .map(OrderedObject::unwrap)
+            .toList();
+
+    assertCorrectOrder(result, 3, 5, 2, 4, 1);
+  }
+
+  @Test
+  @DisplayName("Constructor should throw exception when value is null")
+  void assertThrowObjectNull() {
+    assertThrows(Exception.class, () -> new OrderedObject<>(null, 0));
+  }
+
+  @Test
+  @DisplayName("Constructor should throw exception when order is negative")
+  void assertThrowOrderNegative() {
+    assertThrows(Exception.class, () -> new OrderedObject<>(new Object(), -1));
+  }
+
+  @Test
+  @DisplayName(
+      "Throw IllegalArgumentException if the value contains null field, perhaps indicating a failed validation")
+  void throwWhenNullElementDetected() {
+    assertThrows(
+        IllegalArgumentException.class, OrderedObjectTest::nullDetectedLaunchNuclearMissile);
+  }
+
+  @Test
+  @DisplayName("Luckily sort a list that contains no element with one of its field null")
+  void noThrowWhenUsingNullHostile() {
+    assertDoesNotThrow(
+        () -> {
+          var testList = new ArrayList<>(TEST_LIST);
+
+          testList.remove(0);
+
+          IntStream.range(0, testList.size())
+              .mapToObj(indices -> Wrapper.wrap(testList.get(indices), indices))
+              .sorted(
+                  Wrapper.firstCompareBy(TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE))
+              .map(OrderedObject::unwrap)
+              .toList();
+        });
+
+    assertDoesNotThrow(
+        () -> {
+          Wrapper.toSortedList(
+              Collections.emptyList(), TestUser::name, SortingOrder.DESCENDING, NullsOrder.NULLS_HOSTILE);
+        });
+  }
+
+  static List<TestUser> buildResult(SortingOrder sortingOrder, NullsOrder nullsOrder) {
+    return IntStream.range(0, TEST_LIST.size())
+        .mapToObj(indices -> Wrapper.wrap(TEST_LIST.get(indices), indices))
+        .sorted(Wrapper.firstCompareBy(TestUser::name, sortingOrder, nullsOrder))
+        .map(OrderedObject::unwrap)
+        .toList();
+  }
+
+  static void assertCorrectOrder(List<TestUser> result, int... expectedOrders) {
+    IntStream.range(0, expectedOrders.length)
+        .forEach(i -> assertEquals(expectedOrders[i], result.get(i).id()));
+  }
+
+  static void nullDetectedLaunchNuclearMissile() {
+    var testList = new ArrayList<TestUser>();
+
+    testList.add(new TestUser(6, null, 25));
+    testList.add(new TestUser(7, null, 26));
+    testList.add(0, new TestUser(8, null, 28));
+    testList.add(0, new TestUser(8, "X", 29));
+
+    assertNotNull(
+        Wrapper.toSortedList(testList, TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE));
+  }
+}
