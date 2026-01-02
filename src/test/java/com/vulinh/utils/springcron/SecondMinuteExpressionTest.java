@@ -29,8 +29,8 @@ class SecondMinuteExpressionTest {
         of(SPECIFIC_VALUES, "3,2,1", new int[] {3, 2, 1, 2, 3, 1}),
         of(BETWEEN, "10-20", new int[] {20, 10}),
         of(BETWEEN, "0-59", new int[] {59, 0}),
-        of(SPECIFIC_RANGES, "5-10,15-20", new int[] {5, 15, 10, 20}),
-        of(SPECIFIC_RANGES, "0-10,30-40", new int[] {0, 30, 10, 40}),
+        of(SPECIFIC_INTERVALS, "5-20", new int[] {5, 15, 10, 20}),
+        of(SPECIFIC_INTERVALS, "5-10,15-20", new int[] {5, 10, 15, 20}),
         of(NO_CARE, "0", new int[] {9, 46, 7, 144}));
   }
 
@@ -44,8 +44,8 @@ class SecondMinuteExpressionTest {
     return Stream.of(
         of(BETWEEN, new int[] {10, -1}),
         of(BETWEEN, new int[] {60, 10}),
-        of(SPECIFIC_RANGES, new int[] {0, 30, 10, 70}),
-        of(SPECIFIC_RANGES, new int[] {0, 30, 10, 40, 20}),
+        of(SPECIFIC_INTERVALS, new int[] {0, 30, 10, 70}),
+        of(SPECIFIC_INTERVALS, new int[] {0, 30, 10, 40, 20}),
         of(SPECIFIC_VALUES, EMPTY_INT_ARRAY));
   }
 }

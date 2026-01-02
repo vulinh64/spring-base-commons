@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
+import com.vulinh.utils.springcron.IntervalType;
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.RangeType;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -19,21 +19,21 @@ public enum SecondMinuteExpression implements PartExpression {
               list, Constants.SECOND_MINUTE_ONE, Constants.SECOND_MINUTE_MAX),
       Generators::everyNthExpression),
 
-  /** Expression representing a range between two seconds or minutes. */
+  /** Expression representing an interval between two seconds or minutes. */
   BETWEEN(
       list ->
           Validators.isValidDualListWithinBounds(list, Constants.ZERO, Constants.SECOND_MINUTE_MAX),
-      list -> Generators.betweenExpression(list, RangeType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
 
   /** Expression representing specific values for seconds or minutes. */
   SPECIFIC_VALUES(
-      list -> Validators.isValidListWithinRange(list, Constants.ZERO, Constants.SECOND_MINUTE_MAX),
+      list -> Validators.isValidListWithinBound(list, Constants.ZERO, Constants.SECOND_MINUTE_MAX),
       list -> Generators.specificValueExpression(list, String::valueOf)),
 
-  /** Expression representing specific ranges for seconds or minutes. */
-  SPECIFIC_RANGES(
+  /** Expression representing specific intervals for seconds or minutes. */
+  SPECIFIC_INTERVALS(
       SpecificIntervalValidator.MINUTE_SECOND_INTERVAL_VALIDATOR::isValidMultiIntervalList,
-      list -> Generators.rangeExpression(list, String::valueOf, RangeType.INFLEXIBLE)),
+      Generators::inflexibleMergeableIntervalExpression),
 
   /** Expression representing no specific care for seconds or minutes (i.e., wildcard). */
   NO_CARE(Validators.alwaysTrue(), Generators.noCare());

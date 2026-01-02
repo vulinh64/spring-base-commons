@@ -63,7 +63,7 @@ class Validators {
    * @param upperBound Ceiling bound (inclusive).
    * @return {@code true} if the list is valid and all elements are within bounds; {@code false}
    */
-  static boolean isValidListWithinRange(List<Integer> list, int lowerBound, int upperBound) {
+  static boolean isValidListWithinBound(List<Integer> list, int lowerBound, int upperBound) {
     return isNotEmpty(list)
         && list.stream().allMatch(e -> isBetweenInclusive(e, lowerBound, upperBound));
   }

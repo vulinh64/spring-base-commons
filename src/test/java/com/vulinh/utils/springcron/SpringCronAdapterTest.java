@@ -37,14 +37,15 @@ class SpringCronAdapterTest {
   }
 
   @Test
-  void testSpecificSecondMinuteRangesAdapter() {
+  void testSpecificSecondMinuteIntervalsAdapter() {
     var input =
-        SpringCronAdapter.specificSecondMinuteRanges(
-            Range.of(5, 10, RangeType.INFLEXIBLE), Range.of(7, 3, RangeType.INFLEXIBLE));
+        SpringCronAdapter.specificSecondMinuteIntervals(
+            Interval.of(5, 10, IntervalType.INFLEXIBLE),
+            Interval.of(7, 3, IntervalType.INFLEXIBLE));
 
-    assertEquals(SecondMinuteExpression.SPECIFIC_RANGES, input.expression());
+    assertEquals(SecondMinuteExpression.SPECIFIC_INTERVALS, input.expression());
     assertArrayEquals(new int[] {5, 10, 3, 7}, input.arguments());
-    assertEquals("3-5,7-10", input.toPartExpression());
+    assertEquals("3-10", input.toPartExpression());
   }
 
   @Test
@@ -76,9 +77,9 @@ class SpringCronAdapterTest {
 
   @Test
   void testSpecificHourRangesAdapter() {
-    var input = SpringCronAdapter.specificHourRanges(Range.of(4, 2), Range.of(6, 22));
+    var input = SpringCronAdapter.specificHourRanges(Interval.of(4, 2), Interval.of(6, 22));
 
-    assertEquals(HourExpression.SPECIFIC_HOUR_RANGES, input.expression());
+    assertEquals(HourExpression.SPECIFIC_HOUR_INTERVALS, input.expression());
     assertArrayEquals(new int[] {2, 4, 6, 22}, input.arguments());
     assertEquals("2-4,6-22", input.toPartExpression());
   }
@@ -113,9 +114,10 @@ class SpringCronAdapterTest {
   @Test
   void testSpecificDayRangesAdapter() {
     var input =
-        SpringCronAdapter.specificDayRanges(Range.of(1, 9), Range.of(10, 19), Range.of(31, 20));
+        SpringCronAdapter.specificDayRanges(
+            Interval.of(1, 9), Interval.of(10, 19), Interval.of(31, 20));
 
-    assertEquals(DayExpression.SPECIFIC_DAY_RANGES, input.expression());
+    assertEquals(DayExpression.SPECIFIC_DAY_INTERVALS, input.expression());
     assertArrayEquals(new int[] {1, 9, 10, 19, 20, 31}, input.arguments());
     assertEquals("1-9,10-19,20-31", input.toPartExpression());
   }
@@ -163,7 +165,7 @@ class SpringCronAdapterTest {
         SpringCronAdapter.specificMonthRanges(
             MonthRange.of(Month.JANUARY, Month.NOVEMBER), MonthRange.of(Month.JULY, Month.AUGUST));
 
-    assertEquals(MonthExpression.SPECIFIC_MONTH_RANGES, input.expression());
+    assertEquals(MonthExpression.SPECIFIC_MONTH_INTERVAL, input.expression());
     assertArrayEquals(new int[] {1, 11, 7, 8}, input.arguments());
     assertEquals("JAN-JUL,AUG-NOV", input.toPartExpression());
   }

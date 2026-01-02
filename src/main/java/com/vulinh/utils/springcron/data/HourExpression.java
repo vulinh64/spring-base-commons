@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.RangeType;
+import com.vulinh.utils.springcron.IntervalType;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -18,20 +18,20 @@ public enum HourExpression implements PartExpression {
           Validators.isValidSingletonListWithinBounds(list, Constants.HOUR_ONE, Constants.HOUR_MAX),
       Generators::everyNthExpression),
 
-  /** Expression representing a range between two hours. */
+  /** Expression representing an interval between two hours. */
   BETWEEN_HOURS(
       list -> Validators.isValidDualListWithinBounds(list, Constants.HOUR_MIN, Constants.HOUR_MAX),
-      list -> Generators.betweenExpression(list, RangeType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
 
   /** Expression representing specific values for hours. */
   SPECIFIC_HOURS(
-      list -> Validators.isValidListWithinRange(list, Constants.HOUR_MIN, Constants.HOUR_MAX),
+      list -> Validators.isValidListWithinBound(list, Constants.HOUR_MIN, Constants.HOUR_MAX),
       list -> Generators.specificValueExpression(list, String::valueOf)),
 
-  /** Expression representing specific ranges for hours. */
-  SPECIFIC_HOUR_RANGES(
+  /** Expression representing specific intervals for hours. */
+  SPECIFIC_HOUR_INTERVALS(
       SpecificIntervalValidator.HOUR_INTERVAL_VALIDATOR::isValidMultiIntervalList,
-      list -> Generators.rangeExpression(list, String::valueOf, RangeType.INFLEXIBLE)),
+      Generators::inflexibleMergeableIntervalExpression),
 
   /** Expression representing no specific care for hours. */
   HOUR_NO_CARE(Validators.alwaysTrue(), Generators.noCare());

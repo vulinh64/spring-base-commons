@@ -1,10 +1,13 @@
 package com.vulinh.utils.springcron.data;
 
+import com.vulinh.utils.springcron.Interval;
+import com.vulinh.utils.springcron.IntervalType;
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.RangeType;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /** Enumeration representing different expressions for months in a cron expression. */
 public enum MonthExpression implements PartExpression {
@@ -19,21 +22,36 @@ public enum MonthExpression implements PartExpression {
               list, Constants.MONTH_MIN, Constants.MONTH_MAX),
       Generators::everyNthExpression),
 
-  /** Expression representing a range between two months. */
+  /** Expression representing an interval between two months. */
   BETWEEN_MONTHS(
       list ->
           Validators.isValidDualListWithinBounds(list, Constants.MONTH_MIN, Constants.MONTH_MAX),
-      list -> Generators.betweenExpression(list, RangeType.FLEXIBLE, Constants.MONTH_MAP::get)),
+      list -> Generators.betweenExpression(list, IntervalType.FLEXIBLE, Constants.MONTH_MAP::get)),
 
   /** Expression representing specific values for months. */
   SPECIFIC_MONTHS(
-      list -> Validators.isValidListWithinRange(list, Constants.MONTH_MIN, Constants.MONTH_MAX),
+      list -> Validators.isValidListWithinBound(list, Constants.MONTH_MIN, Constants.MONTH_MAX),
       list -> Generators.specificValueExpression(list, Constants.MONTH_MAP::get)),
 
-  /** Expression representing specific ranges for months. */
-  SPECIFIC_MONTH_RANGES(
+  /** Expression representing specific intervals for months. */
+  SPECIFIC_MONTH_INTERVAL(
       SpecificIntervalValidator.MONTH_INTERVAL_VALIDATOR::isValidMultiIntervalList,
-      list -> Generators.rangeExpression(list, Constants.MONTH_MAP::get, RangeType.FLEXIBLE)),
+      list -> {
+        var sortedList = list.stream().distinct().sorted().toList();
+
+        var result = new LinkedList<Interval>();
+
+        for (int i = 0; i < sortedList.size(); i = i + 2) {
+          var first = sortedList.get(i);
+          var second = sortedList.get(i + 1);
+
+          result.add(Interval.of(first, second));
+        }
+
+        return result.stream()
+            .map(interval -> Generators.createSingleInterval(Constants.MONTH_MAP::get, interval))
+            .collect(Collectors.joining(Generators.COMMA));
+      }),
 
   /** Expression representing no specific care for months. */
   MONTH_NO_CARE(Validators.alwaysTrue(), Generators.noCare());

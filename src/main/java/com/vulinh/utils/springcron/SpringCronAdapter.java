@@ -26,12 +26,12 @@ public class SpringCronAdapter {
         SecondMinuteExpression.SPECIFIC_VALUES, SecondMinuteCronInput.builder(), values);
   }
 
-  public static SecondMinuteCronInput specificSecondMinuteRanges(Range... ranges) {
-    return specificRanges(
-        SecondMinuteExpression.SPECIFIC_RANGES,
+  public static SecondMinuteCronInput specificSecondMinuteIntervals(Interval... intervals) {
+    return specificIntervals(
+        SecondMinuteExpression.SPECIFIC_INTERVALS,
         SecondMinuteCronInput.builder(),
-        RangeType.INFLEXIBLE,
-        ranges);
+        IntervalType.INFLEXIBLE,
+            intervals);
   }
 
   public static HourCronInput everyNHours(int n) {
@@ -46,9 +46,9 @@ public class SpringCronAdapter {
     return specificValues(HourExpression.SPECIFIC_HOURS, HourCronInput.builder(), hours);
   }
 
-  public static HourCronInput specificHourRanges(Range... ranges) {
-    return specificRanges(
-        HourExpression.SPECIFIC_HOUR_RANGES, HourCronInput.builder(), RangeType.INFLEXIBLE, ranges);
+  public static HourCronInput specificHourRanges(Interval... intervals) {
+    return specificIntervals(
+        HourExpression.SPECIFIC_HOUR_INTERVALS, HourCronInput.builder(), IntervalType.INFLEXIBLE, intervals);
   }
 
   public static DayCronInput everyNDays(int n) {
@@ -63,9 +63,9 @@ public class SpringCronAdapter {
     return specificValues(DayExpression.SPECIFIC_DAYS, DayCronInput.builder(), days);
   }
 
-  public static DayCronInput specificDayRanges(Range... ranges) {
-    return specificRanges(
-        DayExpression.SPECIFIC_DAY_RANGES, DayCronInput.builder(), RangeType.INFLEXIBLE, ranges);
+  public static DayCronInput specificDayRanges(Interval... intervals) {
+    return specificIntervals(
+        DayExpression.SPECIFIC_DAY_INTERVALS, DayCronInput.builder(), IntervalType.INFLEXIBLE, intervals);
   }
 
   public static DayCronInput nToLastDayOfMonth(int n) {
@@ -89,11 +89,11 @@ public class SpringCronAdapter {
   }
 
   public static MonthCronInput specificMonthRanges(MonthRange... monthRanges) {
-    return specificRanges(
-        MonthExpression.SPECIFIC_MONTH_RANGES,
+    return specificIntervals(
+        MonthExpression.SPECIFIC_MONTH_INTERVAL,
         MonthCronInput.builder(),
-        RangeType.FLEXIBLE,
-        Arrays.stream(monthRanges).map(MonthRange::toRange).toArray(Range[]::new));
+        IntervalType.FLEXIBLE,
+        Arrays.stream(monthRanges).map(MonthRange::toInterval).toArray(Interval[]::new));
   }
 
   public static WeekDayCronInput everyNWeekDays(int n) {
@@ -144,13 +144,13 @@ public class SpringCronAdapter {
     return builder.expression(expression).arguments(values).build();
   }
 
-  private static <P extends PartExpression, C extends CronInput<P>> C specificRanges(
-      P expression, CronInputBuilder<P, C> builder, RangeType rangeType, Range... ranges) {
+  private static <P extends PartExpression, C extends CronInput<P>> C specificIntervals(
+          P expression, CronInputBuilder<P, C> builder, IntervalType intervalType, Interval... intervals) {
     return builder
         .expression(expression)
         .arguments(
-            Arrays.stream(ranges)
-                .map(s -> Range.of(s.start(), s.end(), rangeType))
+            Arrays.stream(intervals)
+                .map(s -> Interval.of(s.start(), s.end(), intervalType))
                 .flatMap(s -> Stream.of(s.start(), s.end()))
                 .mapToInt(Integer::intValue)
                 .toArray())

@@ -35,8 +35,11 @@ class HourExpressionTest {
         of(BETWEEN_HOURS, "0-23", new int[] {23, 0}),
         of(SPECIFIC_HOURS, "0", new int[] {0}),
         of(SPECIFIC_HOURS, "3,2,1", new int[] {3, 2, 1, 2, 3}),
-        of(SPECIFIC_HOUR_RANGES, "1-5,10-15", new int[] {1, 10, 5, 15}),
-        of(SPECIFIC_HOUR_RANGES, "0-3,20-23", new int[] {0, 20, 3, 23}));
+        of(SPECIFIC_HOUR_INTERVALS, "1-15", new int[] {1, 10, 5, 15}),
+        of(SPECIFIC_HOUR_INTERVALS, "1-5,10-15", new int[] {1, 5, 10, 15}),
+        of(SPECIFIC_HOUR_INTERVALS, "0-3,20-23", new int[] {0, 3, 20, 23}),
+        of(SPECIFIC_HOUR_INTERVALS, "0-23", new int[] {0, 20, 3, 23}),
+        of(SPECIFIC_HOUR_INTERVALS, "1-4,6-20", new int[] {1, 3, 2, 4, 6, 20}));
   }
 
   static Stream<Arguments> invalidProvider() {
@@ -44,8 +47,8 @@ class HourExpressionTest {
         of(BETWEEN_HOURS, new int[] {10, -1}),
         of(BETWEEN_HOURS, new int[] {24, 10}),
         of(BETWEEN_HOURS, new int[] {10}),
-        of(SPECIFIC_HOUR_RANGES, new int[] {0, 10, 5, 25}),
-        of(SPECIFIC_HOUR_RANGES, EMPTY_INT_ARRAY),
+        of(SPECIFIC_HOUR_INTERVALS, new int[] {0, 10, 5, 25}),
+        of(SPECIFIC_HOUR_INTERVALS, EMPTY_INT_ARRAY),
         of(EVERY_N_HOUR, new int[] {0}),
         of(EVERY_N_HOUR, new int[] {56}),
         of(SPECIFIC_HOURS, new int[] {-1}),

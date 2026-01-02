@@ -32,7 +32,7 @@ class MonthExpressionTest {
         of(MonthExpression.BETWEEN_MONTHS, "JAN-JUL", new int[] {1, 7}),
         of(MonthExpression.BETWEEN_MONTHS, "DEC-FEB", new int[] {12, 2}),
         of(MonthExpression.SPECIFIC_MONTHS, "MAR,JAN,FEB", new int[] {3, 1, 2, 3}),
-        of(MonthExpression.SPECIFIC_MONTH_RANGES, "APR-JUN,OCT-DEC", new int[] {4, 10, 6, 12}));
+        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, "APR-JUN,OCT-DEC", new int[] {4, 10, 6, 12}));
   }
 
   public static Stream<Arguments> invalidProvider() {
@@ -45,7 +45,7 @@ class MonthExpressionTest {
         of(MonthExpression.BETWEEN_MONTHS, new int[] {5, 13}),
         of(MonthExpression.SPECIFIC_MONTHS, new int[] {0, 5, 3}),
         of(MonthExpression.SPECIFIC_MONTHS, new int[] {2, 14}),
-        of(MonthExpression.SPECIFIC_MONTH_RANGES, new int[] {3, 8, 5, 15}),
-        of(MonthExpression.SPECIFIC_MONTH_RANGES, EMPTY_INT_ARRAY));
+        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, new int[] {3, 8, 5, 15}),
+        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, EMPTY_INT_ARRAY));
   }
 }

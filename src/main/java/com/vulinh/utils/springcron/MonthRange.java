@@ -16,11 +16,11 @@ public record MonthRange(Month start, Month end) {
   }
 
   /**
-   * Convert to integer range.
+   * Convert to integer interval.
    *
-   * @return The integer range represent the month value.
+   * @return The integer interval represent the month value.
    */
-  public Range toRange() {
-    return new Range(start().getValue(), end().getValue());
+  public Interval toInterval() {
+    return Interval.of(start().getValue(), end().getValue());
   }
 }

@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.RangeType;
+import com.vulinh.utils.springcron.IntervalType;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -19,24 +19,24 @@ public enum DayExpression implements PartExpression {
               list, Constants.DAY_OF_MONTH_MIN, Constants.DAY_OF_MONTH_MAX),
       Generators::everyNthExpression),
 
-  /** Expression representing a range between two days of the month. */
+  /** Expression representing an interval between two days of the month. */
   BETWEEN_DAYS(
       list ->
           Validators.isValidDualListWithinBounds(
               list, Constants.DAY_OF_MONTH_MIN, Constants.DAY_OF_MONTH_MAX),
-      list -> Generators.betweenExpression(list, RangeType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
 
   /** Expression representing specific values for days of the month. */
   SPECIFIC_DAYS(
       list ->
-          Validators.isValidListWithinRange(
+          Validators.isValidListWithinBound(
               list, Constants.DAY_OF_MONTH_MIN, Constants.DAY_OF_MONTH_MAX),
       list -> Generators.specificValueExpression(list, String::valueOf)),
 
-  /** Expression representing specific ranges for days of the month. */
-  SPECIFIC_DAY_RANGES(
+  /** Expression representing specific intervals for days of the month. */
+  SPECIFIC_DAY_INTERVALS(
       SpecificIntervalValidator.DAY_OF_MONTH_INTERVAL_VALIDATOR::isValidMultiIntervalList,
-      list -> Generators.rangeExpression(list, String::valueOf, RangeType.INFLEXIBLE)),
+      Generators::inflexibleMergeableIntervalExpression),
 
   /** Expression representing the N day(s) to the end of the month. */
   N_TO_LAST_DAY(

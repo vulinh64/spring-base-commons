@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
+import com.vulinh.utils.springcron.IntervalType;
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.RangeType;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -19,22 +19,23 @@ public enum WeekDayExpression implements PartExpression {
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
       Generators::everyNthExpression),
 
-  /** Expression representing a range between two days of the week. */
+  /** Expression representing an interval between two days of the week. */
   BETWEEN_WEEK_DAYS(
       list ->
           Validators.isValidDualListWithinBounds(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
       list ->
-          Generators.betweenExpression(list, RangeType.FLEXIBLE, Constants.DAY_OF_WEEK_MAP::get)),
+          Generators.betweenExpression(
+              list, IntervalType.FLEXIBLE, Constants.DAY_OF_WEEK_MAP::get)),
 
   /** Expression representing specific values for days of the week. */
   SPECIFIC_WEEK_DAYS(
       list ->
-          Validators.isValidListWithinRange(
+          Validators.isValidListWithinBound(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
       list -> Generators.specificValueExpression(list, Constants.DAY_OF_WEEK_MAP::get)),
 
-  /** Expression representing specific ranges for days of the week. */
+  /** Expression representing the Nth occurrence of a specific day of the week in a month. */
   NTH_OCCURRENCE(
       list ->
           Validators.isNotEmpty(list)
