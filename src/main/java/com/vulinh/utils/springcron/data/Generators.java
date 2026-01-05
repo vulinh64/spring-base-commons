@@ -101,12 +101,13 @@ class Generators {
     }
 
     return Merger.mergeRanges(ranges).stream()
-        .map(r -> "%d-%d".formatted(r.from(), r.to()))
+        .map(range -> "%d-%d".formatted(range.getFrom(), range.getTo()))
         .collect(Collectors.joining(COMMA));
   }
 
   /**
-   * Creates a string representation of a single interval using the provided {@code toTextTransformer}.
+   * Creates a string representation of a single interval using the provided {@code
+   * toTextTransformer}.
    *
    * @param toTextTransformer Function to transform integer values to strings.
    * @param interval The interval object containing start and end values.

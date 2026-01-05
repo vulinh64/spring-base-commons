@@ -1,32 +1,63 @@
 package com.vulinh.utils.intersectedrange;
 
 import java.util.Comparator;
-import org.springframework.lang.Nullable;
+import java.util.Objects;
 
 /**
  * Represents a range with a start (from) and end (to) value, along with an optional comparator for
  * custom comparison logic.
  *
- * @param from Start of the range
- * @param to End of the range
- * @param comparator Optional comparator for custom comparison
  * @param <T> Type of the range boundaries
  */
-public record Range<T>(T from, T to, @Nullable Comparator<T> comparator) {
+public final class Range<T> {
+
+  /** Start of the range */
+  private final T from;
+
+  /** End of the range */
+  private final T to;
+
+  /** Optional {@link Comparator} for custom comparison */
+  private final Comparator<? super T> comparator;
 
   /**
-   * Compact constructor for Range that ensures from is less than or equal to.
+   * Create a builder for Range.
+   *
+   * @return A {@link RangeBuilder} instance
+   * @param <T> Type of the range boundaries, must be comparable
+   */
+  public static <T extends Comparable<? super T>> RangeBuilder<T> builder() {
+    return new RangeBuilder<>(null);
+  }
+
+  /**
+   * Create a builder for Range with a custom comparator.
+   *
+   * @param comparator Custom comparator for the range boundaries
+   * @return A {@link RangeBuilder} instance
+   * @param <T> Type of the range boundaries
+   */
+  public static <T> RangeBuilder<T> builder(Comparator<T> comparator) {
+    return new RangeBuilder<>(comparator);
+  }
+
+  /**
+   * Constructor for Range that ensures from is less than or equal to.
    *
    * @param from Start of the range
    * @param to End of the range
    * @param comparator Optional comparator for custom comparison
    */
-  public Range {
+  public Range(T from, T to, Comparator<? super T> comparator) {
     if (ComparatorUtils.compare(from, to, comparator) > 0) {
       var temp = from;
       from = to;
       to = temp;
     }
+
+    this.from = from;
+    this.to = to;
+    this.comparator = comparator;
   }
 
   /**
@@ -40,8 +71,8 @@ public record Range<T>(T from, T to, @Nullable Comparator<T> comparator) {
       throw new IntersectedRangeException("Other range cannot be null");
     }
 
-    return ComparatorUtils.compare(from(), other.to(), comparator) < 0
-        && ComparatorUtils.compare(to(), other.from(), comparator) >= 0;
+    return ComparatorUtils.compare(getFrom(), other.getTo(), comparator) < 0
+        && ComparatorUtils.compare(getTo(), other.getFrom(), comparator) >= 0;
   }
 
   /**
@@ -59,18 +90,37 @@ public record Range<T>(T from, T to, @Nullable Comparator<T> comparator) {
       throw new IntersectedRangeException("Cannot merge non-intersected ranges");
     }
 
+    var otherFrom = other.getFrom();
+    var otherTo = other.getTo();
+
     return new Range<>(
-        ComparatorUtils.compare(from(), other.from(), comparator) < 0 ? from() : other.from(),
-        ComparatorUtils.compare(to(), other.to(), comparator) > 0 ? to() : other.to(),
+        ComparatorUtils.compare(from, otherFrom, comparator) < 0 ? from : otherFrom,
+        ComparatorUtils.compare(to, otherTo, comparator) > 0 ? to : otherTo,
         comparator);
   }
 
-  public static <T extends Comparable<? super T>> RangeBuilder<T> builder() {
-    return new RangeBuilder<>(null);
+  // For the sake of equals and hashCode, make sure that
+  // you have a Comparator instance than can be compared
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Range<?> range)
+        && Objects.equals(from, range.getFrom())
+        && Objects.equals(to, range.getTo())
+        && Objects.equals(comparator, range.comparator);
   }
 
-  public static <T> RangeBuilder<T> builder(Comparator<T> comparator) {
-    return new RangeBuilder<>(comparator);
+  @Override
+  public int hashCode() {
+    return Objects.hash(from, to, comparator);
+  }
+
+  public T getFrom() {
+    return from;
+  }
+
+  public T getTo() {
+    return to;
   }
 
   public static class RangeBuilder<T> {
@@ -78,7 +128,7 @@ public record Range<T>(T from, T to, @Nullable Comparator<T> comparator) {
     T from;
     T to;
 
-    private final Comparator<T> comparator;
+    final Comparator<T> comparator;
 
     RangeBuilder(Comparator<T> comparator) {
       this.comparator = comparator;

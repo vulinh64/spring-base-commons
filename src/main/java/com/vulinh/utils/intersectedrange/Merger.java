@@ -39,7 +39,8 @@ public class Merger {
     // Because the input may or may not be mutable
     var sortableRanges = new ArrayList<>(ranges);
 
-    sortableRanges.sort((o1, o2) -> ComparatorUtils.compare(o1.from(), o2.from(), comparator));
+    sortableRanges.sort(
+        (o1, o2) -> ComparatorUtils.compare(o1.getFrom(), o2.getFrom(), comparator));
 
     // We don't want to see array reallocation during merging
     var mergedRanges = new LinkedList<Range<T>>();

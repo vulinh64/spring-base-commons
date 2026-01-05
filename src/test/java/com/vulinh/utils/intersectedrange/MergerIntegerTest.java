@@ -40,7 +40,7 @@ class MergerIntegerTest {
 
     var first = result.get(0);
 
-    assertAll(() -> assertEquals(1, first.from()), () -> assertEquals(7, first.to()));
+    assertAll(() -> assertEquals(1, first.getFrom()), () -> assertEquals(7, first.getTo()));
   }
 
   @Test

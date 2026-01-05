@@ -61,8 +61,8 @@ class MergerTest {
 
     assertAll(
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(BASE_TIME, result.get(0).from()),
-        () -> assertEquals(BASE_TIME.plusHours(3), result.get(0).to()));
+        () -> assertEquals(BASE_TIME, result.get(0).getFrom()),
+        () -> assertEquals(BASE_TIME.plusHours(3), result.get(0).getTo()));
   }
 
   @Test

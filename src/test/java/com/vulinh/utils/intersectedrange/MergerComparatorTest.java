@@ -31,26 +31,26 @@ class MergerComparatorTest {
         () -> {
           var range1 = mergedRanges.get(0);
 
-          assertEquals('a', range1.from());
-          assertEquals('f', range1.to());
+          assertEquals('a', range1.getFrom());
+          assertEquals('f', range1.getTo());
         },
         () -> {
           var range1 = mergedRanges.get(1);
 
-          assertEquals('k', range1.from());
-          assertEquals('m', range1.to());
+          assertEquals('k', range1.getFrom());
+          assertEquals('m', range1.getTo());
         },
         () -> {
           var range3 = mergedRanges.get(2);
 
-          assertEquals('p', range3.from());
-          assertEquals('q', range3.to());
+          assertEquals('p', range3.getFrom());
+          assertEquals('q', range3.getTo());
         },
         () -> {
           var range4 = mergedRanges.get(3);
 
-          assertEquals('r', range4.from());
-          assertEquals('t', range4.to());
+          assertEquals('r', range4.getFrom());
+          assertEquals('t', range4.getTo());
         });
   }
 }
