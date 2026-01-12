@@ -30,4 +30,8 @@ public interface CircularRange<T> {
    * @return list of all elements in the cycle (should not be modified and be cached)
    */
   List<T> getAllElements();
+
+  default int getSize() {
+    return getAllElements().size();
+  }
 }

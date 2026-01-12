@@ -36,8 +36,10 @@ public class Merger {
     }
 
     // Get the cycle of elements and its length
-    var elementCycle = ranges.get(0).getAllElements();
-    var cycleLength = elementCycle.size();
+    var firstRange = ranges.get(0);
+
+    var elementCycle = firstRange.getAllElements();
+    var cycleLength = firstRange.getSize();
 
     var rangeSegments = new LinkedList<Segment>();
 
