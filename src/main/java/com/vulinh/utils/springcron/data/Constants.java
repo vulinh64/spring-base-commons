@@ -1,5 +1,6 @@
 package com.vulinh.utils.springcron.data;
 
+import com.vulinh.utils.CommonUtils;
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.util.Map;
@@ -74,7 +75,7 @@ class Constants {
           .entrySet()
           .stream()
           .collect(
-              Collectors.toMap(Map.Entry::getKey, v -> Generators.first3Letters(v.getValue())));
+              Collectors.toMap(Map.Entry::getKey, v -> CommonUtils.first3Letters(v.getValue())));
 
   /**
    * A mapping of day of week numbers to their three-letter abbreviations. Note that both 0 and 7
@@ -93,7 +94,7 @@ class Constants {
           .entrySet()
           .stream()
           .collect(
-              Collectors.toMap(Map.Entry::getKey, v -> Generators.first3Letters(v.getValue())));
+              Collectors.toMap(Map.Entry::getKey, v -> CommonUtils.first3Letters(v.getValue())));
 
   /** No instantiation. */
   private Constants() {}

@@ -38,16 +38,6 @@ class Generators {
   }
 
   /**
-   * Get first three letters of an enum value.
-   *
-   * @param value enum value
-   * @return first three letters of the enum value.
-   */
-  static String first3Letters(Enum<?> value) {
-    return value.name().substring(0, 3);
-  }
-
-  /**
    * Generates a cron expression for every Nth occurrence based on the provided list.
    *
    * @param list List containing a single integer representing the Nth value.

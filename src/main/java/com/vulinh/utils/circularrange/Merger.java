@@ -1,8 +1,8 @@
 package com.vulinh.utils.circularrange;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /** Utility class for merging circular ranges. */
 public class Merger {
@@ -16,65 +16,45 @@ public class Merger {
    * @return Merged range string representation
    * @param <T> Type of elements in the circular range
    */
-  public static <T> String mergeCircularRanges(List<? extends CircularRange<T>> ranges) {
-    return mergeCircularRanges(ranges, MergeMode.NO_GAPS);
-  }
-
-  /**
-   * Merges circular ranges with optional gap tolerance.
-   *
-   * @param ranges List of circular ranges to merge
-   * @param mergeMode Merge mode defining gap tolerance
-   * @return Merged range string representation
-   * @param <T> Type of elements in the circular range
-   */
-  public static <T> String mergeCircularRanges(
-      List<? extends CircularRange<T>> ranges, MergeMode mergeMode) {
+  public static <T> List<TransformedSegment> mergeCircularRanges(
+      List<? extends CircularRange<T>> ranges) {
     // Handle null or empty input
     if (ranges == null || ranges.isEmpty()) {
-      return "";
+      return Collections.emptyList();
     }
 
-    // Get the cycle of elements and its length
-    var firstRange = ranges.get(0);
+    var firstElement = ranges.stream().findFirst().orElseThrow();
 
-    var elementCycle = firstRange.getAllElements();
-    var cycleLength = firstRange.getSize();
-
-    var rangeSegments = new LinkedList<Segment>();
+    var elementCycle = firstElement.getAllElements();
+    var cycleLength = firstElement.getSize();
 
     // Convert each range to one or two segments (handle wrap-around)
+    List<Segment> rangeSegments = new LinkedList<>();
     for (var range : ranges) {
-      var startIndex = elementCycle.indexOf(range.start());
-      var endIndex = elementCycle.indexOf(range.end());
-
-      // Normal range (including single-element ranges where start == end)
+      int startIndex = elementCycle.indexOf(range.start());
+      int endIndex = elementCycle.indexOf(range.end());
       if (startIndex <= endIndex) {
         rangeSegments.add(Segment.of(startIndex, endIndex));
       } else {
-        // Wrapped range: split into two segments
-        // e.g., SAT-MON becomes [SAT-SUN] and [MON-MON]
         rangeSegments.add(Segment.of(startIndex, cycleLength - 1));
         rangeSegments.add(Segment.of(0, endIndex));
       }
     }
 
-    // Sort and merge overlapping segments
-    var mergedSegments =
-        mergeOverlappingSegments(rangeSegments.stream().sorted().toList(), cycleLength, mergeMode);
-
-    return formatMergedSegmentsOutput(mergedSegments, elementCycle, cycleLength, mergeMode);
+    // Sort and merge overlapping segments, then format output
+    return mergeOverlappingSegments(rangeSegments, cycleLength).stream()
+        .map(s -> TransformedSegment.from(s, firstElement))
+        .toList();
   }
 
-  // Merge overlapping or adjacent segments based on gap flag
+  // Merge overlapping segments and handle circular wrap-around
   private static List<Segment> mergeOverlappingSegments(
-      List<Segment> rangeSegments, int cycleLength, MergeMode mergeMode) {
+      List<Segment> rangeSegments, int cycleLength) {
     var mergedSegments = new LinkedList<Segment>();
 
-    for (var currentSegment : rangeSegments) {
+    for (var currentSegment : rangeSegments.stream().sorted().toList()) {
       // If no overlap/adjacency, add as new segment; else, merge with previous
-      if (mergedSegments.isEmpty()
-          || !mergedSegments.peekLast().isOverlapped(currentSegment, mergeMode)) {
+      if (mergedSegments.isEmpty() || !mergedSegments.peekLast().isOverlapped(currentSegment)) {
         mergedSegments.add(currentSegment);
       } else {
         var lastSegment = mergedSegments.removeLast();
@@ -82,62 +62,21 @@ public class Merger {
       }
     }
 
-    // Re-stitch wrap-around segments if needed
+    // Check if first and last segments connect around the circle (wrap-around merge)
     if (mergedSegments.size() > 1) {
-      var firstSegment = mergedSegments.peekFirst();
-      var lastSegment = mergedSegments.peekLast();
+      var firstSegment = mergedSegments.getFirst();
+      var lastSegment = mergedSegments.getLast();
 
-      // Check if first segment starts at 0 and last segment ends at cycleLength-1
-      // This indicates they might connect across the wrap-around boundary
-      if (firstSegment != null
-          && lastSegment != null
-          && firstSegment.start() == 0
-          && lastSegment.end() == cycleLength - 1) {
-
-        // Check if they're adjacent across the boundary (based on gap flag)
-        // With gaps allowed, don't auto-merge wrap-around
-        boolean shouldMerge =
-            mergeMode == MergeMode.NO_GAPS && lastSegment.end() + 1 == cycleLength;
-
-        if (shouldMerge) {
-          // Merge them into a wrap-around segment
-          mergedSegments.removeFirst();
-          mergedSegments.removeLast();
-          mergedSegments.add(Segment.of(lastSegment.start(), firstSegment.end()));
-        }
+      // If last segment ends at cycleLength-1 and first segment starts at 0,
+      // and they are adjacent, merge them into a wrapped segment
+      if (lastSegment.end() == cycleLength - 1 && firstSegment.start() == 0) {
+        mergedSegments.removeFirst();
+        mergedSegments.removeLast();
+        // Create wrapped segment: from lastSegment.start() wrapping to firstSegment.end()
+        mergedSegments.add(Segment.of(lastSegment.start(), firstSegment.end()));
       }
     }
 
     return mergedSegments;
-  }
-
-  private static <T> String formatMergedSegmentsOutput(
-      List<Segment> mergedSegments, List<T> elementCycle, int cycleLength, MergeMode mergeMode) {
-    if (mergedSegments.isEmpty()) {
-      return "";
-    }
-
-    // Only check for full coverage when gaps are NOT allowed
-    if (mergeMode == MergeMode.NO_GAPS) {
-      var totalCoveredLength = 0;
-
-      // Calculate total covered length to check for full coverage
-      for (var segment : mergedSegments) {
-        totalCoveredLength += segment.length(cycleLength);
-      }
-
-      // If all elements are covered, return "*"
-      if (totalCoveredLength >= cycleLength) {
-        return "*";
-      }
-    }
-
-    // Otherwise, format each segment as start-end
-    return mergedSegments.stream()
-        .map(
-            segment ->
-                "%s-%s"
-                    .formatted(elementCycle.get(segment.start()), elementCycle.get(segment.end())))
-        .collect(Collectors.joining(","));
   }
 }

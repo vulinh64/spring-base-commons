@@ -1,7 +1,10 @@
 package com.vulinh.utils.circularrange;
 
+import com.vulinh.utils.CommonUtils;
+
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Circular range for DayOfWeek (MONDAY to SUNDAY).
@@ -29,5 +32,10 @@ public record CircularDayOfWeek(DayOfWeek start, DayOfWeek end)
   @Override
   public List<DayOfWeek> getAllElements() {
     return ALL;
+  }
+
+  @Override
+  public Function<DayOfWeek, String> getTransformer() {
+    return CommonUtils::first3Letters;
   }
 }

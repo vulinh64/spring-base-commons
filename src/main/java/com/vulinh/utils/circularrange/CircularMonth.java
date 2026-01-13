@@ -1,7 +1,9 @@
 package com.vulinh.utils.circularrange;
 
+import com.vulinh.utils.CommonUtils;
 import java.time.Month;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Circular range for Month (JANUARY to DECEMBER).
@@ -28,5 +30,10 @@ public record CircularMonth(Month start, Month end) implements CircularRange<Mon
   @Override
   public List<Month> getAllElements() {
     return ALL;
+  }
+
+  @Override
+  public Function<Month, String> getTransformer() {
+    return CommonUtils::first3Letters;
   }
 }
