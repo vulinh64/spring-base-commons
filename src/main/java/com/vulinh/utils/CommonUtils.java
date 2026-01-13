@@ -1,5 +1,6 @@
 package com.vulinh.utils;
 
+/** Shared common utility methods. */
 public class CommonUtils {
 
   private CommonUtils() {}
