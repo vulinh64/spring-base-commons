@@ -8,9 +8,19 @@ import java.util.function.Function;
 
 /**
  * Circular range for DayOfWeek (MONDAY to SUNDAY).
+ * <p>
+ * This class represents a circular range of days of the week, allowing for ranges that may wrap around
+ * the end of the week (e.g., FRIDAY to MONDAY). It implements the {@link CircularRange} interface for
+ * {@link DayOfWeek} values, providing a fixed cycle of all days in order from MONDAY to SUNDAY.
+ * <p>
+ * Use {@link #of(DayOfWeek, DayOfWeek)} to create instances.
  *
- * @param start start day of week
- * @param end end day of week
+ * <pre>
+ *   CircularDayOfWeek range = CircularDayOfWeek.of(DayOfWeek.FRIDAY, DayOfWeek.MONDAY);
+ * </pre>
+ *
+ * @param start the start day of week (inclusive)
+ * @param end the end day of week (inclusive)
  */
 public record CircularDayOfWeek(DayOfWeek start, DayOfWeek end)
     implements CircularRange<DayOfWeek> {
@@ -19,11 +29,11 @@ public record CircularDayOfWeek(DayOfWeek start, DayOfWeek end)
   static final List<DayOfWeek> ALL = List.of(DayOfWeek.values());
 
   /**
-   * Factory method to create a {@link CircularDayOfWeek} instance.
+   * Returns a new {@link CircularDayOfWeek} instance for the given start and end days.
    *
-   * @param start start day of week
-   * @param end end day of week
-   * @return new {@link CircularDayOfWeek} instance
+   * @param start the start day of week (inclusive)
+   * @param end the end day of week (inclusive)
+   * @return a new {@link CircularDayOfWeek} instance
    */
   public static CircularDayOfWeek of(DayOfWeek start, DayOfWeek end) {
     return new CircularDayOfWeek(start, end);

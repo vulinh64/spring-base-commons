@@ -8,8 +8,19 @@ import java.util.function.Function;
 /**
  * Circular range for Month (JANUARY to DECEMBER).
  *
- * @param start start month
- * @param end end month
+ * <p>This class represents a circular range of months, allowing for ranges that may wrap around the
+ * end of the year (e.g., DECEMBER to FEBRUARY). It implements the {@link CircularRange} interface
+ * for {@link Month} values, providing a fixed cycle of all months in order from JANUARY to
+ * DECEMBER.
+ *
+ * <p>Use {@link #of(Month, Month)} to create instances.
+ *
+ * <pre>
+ *   CircularMonth range = CircularMonth.of(Month.DECEMBER, Month.FEBRUARY);
+ * </pre>
+ *
+ * @param start the start month (inclusive)
+ * @param end the end month (inclusive)
  */
 public record CircularMonth(Month start, Month end) implements CircularRange<Month> {
 
@@ -17,11 +28,11 @@ public record CircularMonth(Month start, Month end) implements CircularRange<Mon
   static final List<Month> ALL = List.of(Month.values());
 
   /**
-   * Factory method to create a {@link CircularMonth} instance.
+   * Returns a new {@link CircularMonth} instance for the given start and end months.
    *
-   * @param start start month
-   * @param end end month
-   * @return new {@link CircularMonth} instance
+   * @param start the start month (inclusive)
+   * @param end the end month (inclusive)
+   * @return a new {@link CircularMonth} instance
    */
   public static CircularMonth of(Month start, Month end) {
     return new CircularMonth(start, end);
