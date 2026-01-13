@@ -1,6 +1,5 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.springcron.IntervalType;
 import com.vulinh.utils.springcron.PartExpression;
 import java.util.List;
 import java.util.function.Function;
@@ -23,7 +22,7 @@ public enum SecondMinuteExpression implements PartExpression {
   BETWEEN(
       list ->
           Validators.isValidDualListWithinBounds(list, Constants.ZERO, Constants.SECOND_MINUTE_MAX),
-      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, String::valueOf)),
 
   /** Expression representing specific values for seconds or minutes. */
   SPECIFIC_VALUES(

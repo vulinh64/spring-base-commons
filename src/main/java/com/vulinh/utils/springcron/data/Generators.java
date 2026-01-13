@@ -1,6 +1,10 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.intersectedrange.Merger;
+import com.vulinh.utils.CommonUtils;
+import com.vulinh.utils.circularrange.CircularRange;
+import com.vulinh.utils.circularrange.CircularRangeMerger;
+import com.vulinh.utils.circularrange.TransformedSegment;
+import com.vulinh.utils.intersectedrange.IntersectedRangeMerger;
 import com.vulinh.utils.intersectedrange.Range;
 import com.vulinh.utils.springcron.Interval;
 import com.vulinh.utils.springcron.IntervalType;
@@ -71,10 +75,9 @@ class Generators {
    * @param toTextTransformer Function to transform integer values to strings.
    * @return A string representing the interval in the format "e1-e2".
    */
-  static String betweenExpression(
-      List<Integer> list, IntervalType intervalType, IntFunction<String> toTextTransformer) {
+  static String betweenExpression(List<Integer> list, IntFunction<String> toTextTransformer) {
     return createSingleInterval(
-        toTextTransformer, Interval.of(list.get(0), list.get(1), intervalType));
+        toTextTransformer, Interval.of(list.get(0), list.get(1), IntervalType.INFLEXIBLE));
   }
 
   /**
@@ -90,8 +93,8 @@ class Generators {
       ranges.add(Range.<Integer>builder().from(list.get(i)).to(list.get(i + 1)).build());
     }
 
-    return Merger.mergeRanges(ranges).stream()
-        .map(range -> "%d-%d".formatted(range.getFrom(), range.getTo()))
+    return IntersectedRangeMerger.mergeRanges(ranges).stream()
+        .map(range -> CommonUtils.FROM_TO.formatted(range.getFrom(), range.getTo()))
         .collect(Collectors.joining(COMMA));
   }
 
@@ -104,8 +107,21 @@ class Generators {
    * @return String representation of the interval in the format "e1-e2".
    */
   static String createSingleInterval(IntFunction<String> toTextTransformer, Interval interval) {
-    return "%s-%s"
-        .formatted(
-            toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
+    return CommonUtils.FROM_TO.formatted(
+        toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
+  }
+
+  /**
+   * Generates a cron expression for multiple circular ranges by merging them and formatting the
+   * result.
+   *
+   * @param segments List of circular ranges to be merged and formatted.
+   * @return A comma-separated string of merged circular ranges.
+   * @param <T> The type of elements in the circular range.
+   */
+  static <T> String toMultipleCircularRanges(List<? extends CircularRange<T>> segments) {
+    return CircularRangeMerger.mergeCircularRanges(segments).stream()
+        .map(TransformedSegment::toRangeRepresent)
+        .collect(Collectors.joining(","));
   }
 }

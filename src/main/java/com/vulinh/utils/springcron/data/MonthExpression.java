@@ -1,13 +1,12 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.springcron.Interval;
-import com.vulinh.utils.springcron.IntervalType;
+import com.vulinh.utils.circularrange.CircularMonth;
 import com.vulinh.utils.springcron.PartExpression;
+import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /** Enumeration representing different expressions for months in a cron expression. */
 public enum MonthExpression implements PartExpression {
@@ -26,7 +25,9 @@ public enum MonthExpression implements PartExpression {
   BETWEEN_MONTHS(
       list ->
           Validators.isValidDualListWithinBounds(list, Constants.MONTH_MIN, Constants.MONTH_MAX),
-      list -> Generators.betweenExpression(list, IntervalType.FLEXIBLE, Constants.MONTH_MAP::get)),
+      list ->
+          Generators.toMultipleCircularRanges(
+              List.of(CircularMonth.of(Month.of(list.get(0)), Month.of(list.get(1)))))),
 
   /** Expression representing specific values for months. */
   SPECIFIC_MONTHS(
@@ -37,20 +38,13 @@ public enum MonthExpression implements PartExpression {
   SPECIFIC_MONTH_INTERVAL(
       SpecificIntervalValidator.MONTH_INTERVAL_VALIDATOR::isValidMultiIntervalList,
       list -> {
-        var sortedList = list.stream().distinct().sorted().toList();
+        var monthSegments = new LinkedList<CircularMonth>();
 
-        var result = new LinkedList<Interval>();
-
-        for (int i = 0; i < sortedList.size(); i = i + 2) {
-          var first = sortedList.get(i);
-          var second = sortedList.get(i + 1);
-
-          result.add(Interval.of(first, second));
+        for (var i = 0; i < list.size(); i += 2) {
+          monthSegments.add(CircularMonth.of(Month.of(list.get(i)), Month.of(list.get(i + 1))));
         }
 
-        return result.stream()
-            .map(interval -> Generators.createSingleInterval(Constants.MONTH_MAP::get, interval))
-            .collect(Collectors.joining(Generators.COMMA));
+        return Generators.toMultipleCircularRanges(monthSegments);
       }),
 
   /** Expression representing no specific care for months. */

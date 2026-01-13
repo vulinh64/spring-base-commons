@@ -1,7 +1,8 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.springcron.IntervalType;
+import com.vulinh.utils.circularrange.CircularDayOfWeek;
 import com.vulinh.utils.springcron.PartExpression;
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -24,9 +25,16 @@ public enum WeekDayExpression implements PartExpression {
       list ->
           Validators.isValidDualListWithinBounds(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
-      list ->
-          Generators.betweenExpression(
-              list, IntervalType.FLEXIBLE, Constants.DAY_OF_WEEK_MAP::get)),
+      list -> {
+        var first = list.get(0);
+        var second = list.get(1);
+
+        return Generators.toMultipleCircularRanges(
+            List.of(
+                CircularDayOfWeek.of(
+                    first == 0 ? DayOfWeek.SUNDAY : DayOfWeek.of(first),
+                    second == 0 ? DayOfWeek.SUNDAY : DayOfWeek.of(second))));
+      }),
 
   /** Expression representing specific values for days of the week. */
   SPECIFIC_WEEK_DAYS(

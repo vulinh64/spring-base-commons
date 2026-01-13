@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.IntervalType;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -24,7 +24,7 @@ public enum DayExpression implements PartExpression {
       list ->
           Validators.isValidDualListWithinBounds(
               list, Constants.DAY_OF_MONTH_MIN, Constants.DAY_OF_MONTH_MAX),
-      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, String::valueOf)),
 
   /** Expression representing specific values for days of the month. */
   SPECIFIC_DAYS(

@@ -9,19 +9,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class MergerIntTest {
+class CircularRangeIntersectedRangeMergerIntTest {
 
   @ParameterizedTest
   @MethodSource("emptyOrNullProvider")
   void testMergeCircularRangesEmptyOrNull(List<IntCircularRangeImpl> input) {
-    assertTrue(Merger.mergeCircularRanges(input).isEmpty());
+    assertTrue(CircularRangeMerger.mergeCircularRanges(input).isEmpty());
   }
 
   @ParameterizedTest
   @MethodSource("singleRangeProvider")
   void testMergeCircularRangesSingleRange(
       List<IntCircularRangeImpl> input, int expectedSize, String expectedStart, String expectedEnd) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(expectedSize, result.size());
     var first = result.get(0);
     assertEquals(expectedStart, first.start());
@@ -32,7 +32,7 @@ class MergerIntTest {
   @MethodSource("mergeToOneProvider")
   void testMergeCircularRangesMergeToOne(
       List<IntCircularRangeImpl> input, String expectedStart, String expectedEnd) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(1, result.size());
     var first = result.get(0);
     assertEquals(expectedStart, first.start());
@@ -47,7 +47,7 @@ class MergerIntTest {
       String expectedEnd1,
       String expectedStart2,
       String expectedEnd2) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(2, result.size());
     var first = result.get(0);
     var second = result.get(1);

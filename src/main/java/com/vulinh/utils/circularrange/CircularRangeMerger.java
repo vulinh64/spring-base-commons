@@ -22,10 +22,10 @@ import java.util.List;
  *   List<TransformedSegment> merged = Merger.mergeCircularRanges(input);
  * </pre>
  */
-public class Merger {
+public class CircularRangeMerger {
 
   // Prevent instantiation
-  private Merger() {}
+  private CircularRangeMerger() {}
 
   /**
    * Merges a list of circular ranges into the minimal set of non-overlapping segments.

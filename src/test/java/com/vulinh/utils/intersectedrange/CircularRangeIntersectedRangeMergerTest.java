@@ -1,6 +1,6 @@
 package com.vulinh.utils.intersectedrange;
 
-import static com.vulinh.utils.intersectedrange.Merger.mergeRanges;
+import static com.vulinh.utils.intersectedrange.IntersectedRangeMerger.mergeRanges;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class MergerTest {
+class CircularRangeIntersectedRangeMergerTest {
 
   static final LocalDateTime BASE_TIME = LocalDateTime.of(2024, 1, 1, 0, 0);
 

@@ -167,7 +167,7 @@ class SpringCronAdapterTest {
 
     assertEquals(MonthExpression.SPECIFIC_MONTH_INTERVAL, input.expression());
     assertArrayEquals(new int[] {1, 11, 7, 8}, input.arguments());
-    assertEquals("JAN-JUL,AUG-NOV", input.toPartExpression());
+    assertEquals("JAN-NOV", input.toPartExpression());
   }
 
   @Test
