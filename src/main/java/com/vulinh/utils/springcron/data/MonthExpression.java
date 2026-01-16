@@ -1,9 +1,6 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.circularrange.CircularMonth;
 import com.vulinh.utils.springcron.PartExpression;
-import java.time.Month;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -25,9 +22,7 @@ public enum MonthExpression implements PartExpression {
   BETWEEN_MONTHS(
       list ->
           Validators.isValidDualListWithinBounds(list, Constants.MONTH_MIN, Constants.MONTH_MAX),
-      list ->
-          Generators.toMultipleCircularRanges(
-              List.of(CircularMonth.of(Month.of(list.get(0)), Month.of(list.get(1)))))),
+      Generators::monthCircularRanges),
 
   /** Expression representing specific values for months. */
   SPECIFIC_MONTHS(
@@ -37,15 +32,7 @@ public enum MonthExpression implements PartExpression {
   /** Expression representing specific intervals for months. */
   SPECIFIC_MONTH_INTERVAL(
       SpecificIntervalValidator.MONTH_INTERVAL_VALIDATOR::isValidMultiIntervalList,
-      list -> {
-        var monthSegments = new LinkedList<CircularMonth>();
-
-        for (var i = 0; i < list.size(); i += 2) {
-          monthSegments.add(CircularMonth.of(Month.of(list.get(i)), Month.of(list.get(i + 1))));
-        }
-
-        return Generators.toMultipleCircularRanges(monthSegments);
-      }),
+      Generators::monthCircularRanges),
 
   /** Expression representing no specific care for months. */
   MONTH_NO_CARE(Validators.alwaysTrue(), Generators.noCare());

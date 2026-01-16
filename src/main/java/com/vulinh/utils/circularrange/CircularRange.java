@@ -13,9 +13,10 @@ import java.util.function.Function;
  * <p>Implementations should provide an unmodifiable, ordered list of all possible elements in the
  * cycle, and a transformer function for string representation.
  *
- * @param <T> the type of elements in the circular range
+ * @param <T> the type of elements in the circular range, should be comparable (a circular range
+ *     still need a start and an end)
  */
-public interface CircularRange<T> {
+public interface CircularRange<T extends Comparable<? super T>> {
 
   /**
    * Returns the start element of the circular range.

@@ -25,7 +25,7 @@ import com.vulinh.utils.CommonUtils;
  * @param start the string representation of the segment's start boundary
  * @param end the string representation of the segment's end boundary
  */
-public record TransformedSegment(String start, String end) {
+public record TransformedSegment(String start, String end, boolean isFullRange) {
 
   /**
    * Creates a {@link TransformedSegment} from a {@link Segment} and a sample {@link CircularRange}.
@@ -37,16 +37,24 @@ public record TransformedSegment(String start, String end) {
    * @param sample a sample circular range providing the element cycle and transformer
    * @return a new {@link TransformedSegment} with string boundaries
    */
-  public static <T> TransformedSegment from(Segment segment, CircularRange<T> sample) {
+  public static <T extends Comparable<? super T>> TransformedSegment from(
+      Segment segment, CircularRange<T> sample) {
     var allElements = sample.getAllElements();
+    var sortedElements = allElements.stream().sorted().toList();
+
     var transformer = sample.getTransformer();
 
+    var first = allElements.get(segment.start());
+    var second = allElements.get(segment.end());
+
     return new TransformedSegment(
-        transformer.apply(allElements.get(segment.start())),
-        transformer.apply(allElements.get(segment.end())));
+        transformer.apply(first),
+        transformer.apply(second),
+        first.equals(sortedElements.get(0))
+            && second.equals(sortedElements.get(sortedElements.size() - 1)));
   }
 
   public String toRangeRepresent() {
-    return CommonUtils.FROM_TO.formatted(start, end);
+    return isFullRange ? "*" : CommonUtils.FROM_TO.formatted(start, end);
   }
 }

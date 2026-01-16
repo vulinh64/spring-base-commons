@@ -1,15 +1,16 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.CommonUtils;
-import com.vulinh.utils.circularrange.CircularRange;
-import com.vulinh.utils.circularrange.CircularRangeMerger;
-import com.vulinh.utils.circularrange.TransformedSegment;
+import com.vulinh.utils.circularrange.*;
 import com.vulinh.utils.intersectedrange.IntersectedRangeMerger;
 import com.vulinh.utils.intersectedrange.Range;
 import com.vulinh.utils.springcron.Interval;
 import com.vulinh.utils.springcron.IntervalType;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -111,15 +112,28 @@ class Generators {
         toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
   }
 
-  /**
-   * Generates a cron expression for multiple circular ranges by merging them and formatting the
-   * result.
-   *
-   * @param segments List of circular ranges to be merged and formatted.
-   * @return A comma-separated string of merged circular ranges.
-   * @param <T> The type of elements in the circular range.
-   */
-  static <T> String toMultipleCircularRanges(List<? extends CircularRange<T>> segments) {
+  static String monthCircularRanges(List<Integer> rawList) {
+    return toMultipleCircularRanges(rawList, Month::of, CircularMonth::of);
+  }
+
+  static String dayOfWeekCircularRanges(List<Integer> rawList) {
+    return toMultipleCircularRanges(
+        rawList, day -> day == 0 ? DayOfWeek.SUNDAY : DayOfWeek.of(day), CircularDayOfWeek::of);
+  }
+
+  static <T extends Comparable<? super T>> String toMultipleCircularRanges(
+      List<Integer> rawList,
+      IntFunction<? extends T> fromIntToValueMapper,
+      BiFunction<? super T, ? super T, ? extends CircularRange<T>> toCircularRangeMapper) {
+    var segments = new LinkedList<CircularRange<T>>();
+
+    for (var i = 0; i < rawList.size(); i += 2) {
+      segments.add(
+          toCircularRangeMapper.apply(
+              fromIntToValueMapper.apply(rawList.get(i)),
+              fromIntToValueMapper.apply(rawList.get(i + 1))));
+    }
+
     return CircularRangeMerger.mergeCircularRanges(segments).stream()
         .map(TransformedSegment::toRangeRepresent)
         .collect(Collectors.joining(","));

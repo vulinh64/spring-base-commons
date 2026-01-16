@@ -37,7 +37,7 @@ public class CircularRangeMerger {
    * @param <T> Type of elements in the circular range
    * @return List of merged range segments, with string representations of boundaries
    */
-  public static <T> List<TransformedSegment> mergeCircularRanges(
+  public static <T extends Comparable<? super T>> List<TransformedSegment> mergeCircularRanges(
       List<? extends CircularRange<T>> ranges) {
     // Handle null or empty input
     if (ranges == null || ranges.isEmpty()) {
