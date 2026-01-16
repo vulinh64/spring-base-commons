@@ -1,7 +1,7 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-import com.vulinh.utils.springcron.IntervalType;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -21,7 +21,7 @@ public enum HourExpression implements PartExpression {
   /** Expression representing an interval between two hours. */
   BETWEEN_HOURS(
       list -> Validators.isValidDualListWithinBounds(list, Constants.HOUR_MIN, Constants.HOUR_MAX),
-      list -> Generators.betweenExpression(list, IntervalType.INFLEXIBLE, String::valueOf)),
+      list -> Generators.betweenExpression(list, String::valueOf)),
 
   /** Expression representing specific values for hours. */
   SPECIFIC_HOURS(

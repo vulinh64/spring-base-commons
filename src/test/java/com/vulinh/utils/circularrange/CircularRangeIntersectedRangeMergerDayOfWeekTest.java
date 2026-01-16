@@ -10,19 +10,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class MergerDayOfWeekTest {
+class CircularRangeIntersectedRangeMergerDayOfWeekTest {
 
   @ParameterizedTest
   @MethodSource("emptyOrNullProvider")
   void testMergeCircularRangesEmptyOrNull(List<CircularDayOfWeek> input) {
-    assertTrue(Merger.mergeCircularRanges(input).isEmpty());
+    assertTrue(CircularRangeMerger.mergeCircularRanges(input).isEmpty());
   }
 
   @ParameterizedTest
   @MethodSource("singleRangeProvider")
   void testMergeCircularRangesSingleRange(
       List<CircularDayOfWeek> input, int expectedSize, String expectedStart, String expectedEnd) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
 
     assertEquals(expectedSize, result.size());
 
@@ -36,7 +36,7 @@ class MergerDayOfWeekTest {
   @MethodSource("mergeToOneProvider")
   void testMergeCircularRangesMergeToOne(
       List<CircularDayOfWeek> input, String expectedStart, String expectedEnd) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
 
     assertEquals(1, result.size());
 
@@ -54,7 +54,7 @@ class MergerDayOfWeekTest {
       String expectedEnd1,
       String expectedStart2,
       String expectedEnd2) {
-    var result = Merger.mergeCircularRanges(input);
+    var result = CircularRangeMerger.mergeCircularRanges(input);
 
     assertEquals(2, result.size());
 

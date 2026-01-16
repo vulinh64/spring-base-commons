@@ -1,6 +1,5 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.springcron.IntervalType;
 import com.vulinh.utils.springcron.PartExpression;
 import java.util.List;
 import java.util.function.Function;
@@ -24,9 +23,7 @@ public enum WeekDayExpression implements PartExpression {
       list ->
           Validators.isValidDualListWithinBounds(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
-      list ->
-          Generators.betweenExpression(
-              list, IntervalType.FLEXIBLE, Constants.DAY_OF_WEEK_MAP::get)),
+      Generators::dayOfWeekCircularRanges),
 
   /** Expression representing specific values for days of the week. */
   SPECIFIC_WEEK_DAYS(
@@ -34,6 +31,11 @@ public enum WeekDayExpression implements PartExpression {
           Validators.isValidListWithinBound(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
       list -> Generators.specificValueExpression(list, Constants.DAY_OF_WEEK_MAP::get)),
+
+  /** Expression representing specific intervals for days of the week. */
+  SPECIFIC_WEEK_DAY_INTERVALS(
+      SpecificIntervalValidator.WEEK_DAY_INTERVAL_VALIDATOR::isValidMultiIntervalList,
+      Generators::dayOfWeekCircularRanges),
 
   /** Expression representing the Nth occurrence of a specific day of the week in a month. */
   NTH_OCCURRENCE(

@@ -1,11 +1,16 @@
 package com.vulinh.utils.springcron.data;
 
-import com.vulinh.utils.intersectedrange.Merger;
+import com.vulinh.utils.CommonUtils;
+import com.vulinh.utils.circularrange.*;
+import com.vulinh.utils.intersectedrange.IntersectedRangeMerger;
 import com.vulinh.utils.intersectedrange.Range;
 import com.vulinh.utils.springcron.Interval;
 import com.vulinh.utils.springcron.IntervalType;
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -71,10 +76,9 @@ class Generators {
    * @param toTextTransformer Function to transform integer values to strings.
    * @return A string representing the interval in the format "e1-e2".
    */
-  static String betweenExpression(
-      List<Integer> list, IntervalType intervalType, IntFunction<String> toTextTransformer) {
+  static String betweenExpression(List<Integer> list, IntFunction<String> toTextTransformer) {
     return createSingleInterval(
-        toTextTransformer, Interval.of(list.get(0), list.get(1), intervalType));
+        toTextTransformer, Interval.of(list.get(0), list.get(1), IntervalType.INFLEXIBLE));
   }
 
   /**
@@ -90,8 +94,8 @@ class Generators {
       ranges.add(Range.<Integer>builder().from(list.get(i)).to(list.get(i + 1)).build());
     }
 
-    return Merger.mergeRanges(ranges).stream()
-        .map(range -> "%d-%d".formatted(range.getFrom(), range.getTo()))
+    return IntersectedRangeMerger.mergeRanges(ranges).stream()
+        .map(range -> CommonUtils.FROM_TO.formatted(range.getFrom(), range.getTo()))
         .collect(Collectors.joining(COMMA));
   }
 
@@ -104,8 +108,46 @@ class Generators {
    * @return String representation of the interval in the format "e1-e2".
    */
   static String createSingleInterval(IntFunction<String> toTextTransformer, Interval interval) {
-    return "%s-%s"
-        .formatted(
-            toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
+    return CommonUtils.FROM_TO.formatted(
+        toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
+  }
+
+  /**
+   * Generate expression for circular month ranges.
+   *
+   * @param rawList list of integers representing month ranges
+   * @return string representation of circular month ranges
+   */
+  static String monthCircularRanges(List<Integer> rawList) {
+    return toMultipleCircularRanges(rawList, Month::of, CircularMonth::of);
+  }
+
+  /**
+   * Generate expression for circular day of week ranges.
+   *
+   * @param rawList list of integers representing day of week ranges
+   * @return string representation of circular day of week ranges
+   */
+  static String dayOfWeekCircularRanges(List<Integer> rawList) {
+    return toMultipleCircularRanges(
+        rawList, day -> day == 0 ? DayOfWeek.SUNDAY : DayOfWeek.of(day), CircularDayOfWeek::of);
+  }
+
+  static <T extends Comparable<? super T>> String toMultipleCircularRanges(
+      List<Integer> rawList,
+      IntFunction<? extends T> fromIntToValueMapper,
+      BiFunction<? super T, ? super T, ? extends CircularRange<T>> toCircularRangeMapper) {
+    var segments = new LinkedList<CircularRange<T>>();
+
+    for (var i = 0; i < rawList.size(); i += 2) {
+      segments.add(
+          toCircularRangeMapper.apply(
+              fromIntToValueMapper.apply(rawList.get(i)),
+              fromIntToValueMapper.apply(rawList.get(i + 1))));
+    }
+
+    return CircularRangeMerger.mergeCircularRanges(segments).stream()
+        .map(TransformedSegment::toRangeRepresent)
+        .collect(Collectors.joining(","));
   }
 }

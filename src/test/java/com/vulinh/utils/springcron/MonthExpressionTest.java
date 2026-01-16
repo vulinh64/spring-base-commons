@@ -6,6 +6,7 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 import com.vulinh.exception.SpringCronException;
 import com.vulinh.utils.springcron.data.MonthExpression;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,7 +33,8 @@ class MonthExpressionTest {
         of(MonthExpression.BETWEEN_MONTHS, "JAN-JUL", new int[] {1, 7}),
         of(MonthExpression.BETWEEN_MONTHS, "DEC-FEB", new int[] {12, 2}),
         of(MonthExpression.SPECIFIC_MONTHS, "MAR,JAN,FEB", new int[] {3, 1, 2, 3}),
-        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, "APR-JUN,OCT-DEC", new int[] {4, 10, 6, 12}));
+        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, "APR-DEC", new int[] {4, 10, 6, 12}),
+        of(MonthExpression.SPECIFIC_MONTH_INTERVAL, "DEC-APR", new int[] {12, 2, 3, 4}));
   }
 
   public static Stream<Arguments> invalidProvider() {

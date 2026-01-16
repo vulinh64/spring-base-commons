@@ -5,9 +5,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /** Utility class for merging intersected ranges. */
-public class Merger {
+public class IntersectedRangeMerger {
 
-  private Merger() {}
+  private IntersectedRangeMerger() {}
 
   /**
    * Merge intersected ranges with comparable type.

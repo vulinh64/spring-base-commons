@@ -1,6 +1,6 @@
 package com.vulinh.utils.intersectedrange;
 
-import static com.vulinh.utils.intersectedrange.Merger.mergeRanges;
+import static com.vulinh.utils.intersectedrange.IntersectedRangeMerger.mergeRanges;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-class MergerIntegerTest {
+class CircularRangeIntersectedRangeMergerIntegerTest {
 
   @Test
   void testNullList() {

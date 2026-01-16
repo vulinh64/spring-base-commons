@@ -28,6 +28,9 @@ record SpecificIntervalValidator(int minimum, int maximum) {
   static final SpecificIntervalValidator MONTH_INTERVAL_VALIDATOR =
       new SpecificIntervalValidator(Constants.MONTH_MIN, Constants.MONTH_MAX);
 
+  static final SpecificIntervalValidator WEEK_DAY_INTERVAL_VALIDATOR =
+      new SpecificIntervalValidator(Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX);
+
   /**
    * Creates a predicate to validate a list of values for specific intervals.
    *

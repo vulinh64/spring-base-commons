@@ -1,6 +1,6 @@
 package com.vulinh.utils.intersectedrange;
 
-import static com.vulinh.utils.intersectedrange.Merger.mergeRanges;
+import static com.vulinh.utils.intersectedrange.IntersectedRangeMerger.mergeRanges;
 import static com.vulinh.utils.intersectedrange.Range.builder;
 import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Comparator;
 import org.junit.jupiter.api.Test;
 
-class MergerComparatorTest {
+class CircularRangeIntersectedRangeMergerComparatorTest {
 
   static final Comparator<Character> COMPARATOR = Comparator.comparing(Character::toLowerCase);
 

@@ -34,13 +34,19 @@ class WeekDayExpressionTest {
         of(BETWEEN_WEEK_DAYS, "MON-FRI", new int[] {1, 5}),
         of(BETWEEN_WEEK_DAYS, "FRI-SUN", new int[] {5, 0}),
         of(BETWEEN_WEEK_DAYS, "FRI-SUN", new int[] {5, 7}),
+        of(BETWEEN_WEEK_DAYS, "SUN-TUE", new int[] {7, 2}),
+        of(BETWEEN_WEEK_DAYS, "*", new int[] {0, 6}),
+        of(BETWEEN_WEEK_DAYS, "*", new int[] {1, 7}),
         of(SPECIFIC_WEEK_DAYS, "MON,WED,FRI,SUN", new int[] {1, 3, 5, 7, 0}),
         of(NTH_OCCURRENCE, "TUE#2", new int[] {2, 2}),
         of(NTH_OCCURRENCE, "SUN#3", new int[] {0, 3}),
         of(NTH_OCCURRENCE, "SUN#3", new int[] {7, 3}),
         of(LAST_OF_MONTH, "FRIL", new int[] {5}),
         of(LAST_OF_MONTH, "SUNL", new int[] {0}),
-        of(LAST_OF_MONTH, "SUNL", new int[] {7}));
+        of(LAST_OF_MONTH, "SUNL", new int[] {7}),
+        of(SPECIFIC_WEEK_DAY_INTERVALS, "MON-TUE,THU-FRI", new int[] {1, 2, 4, 5}),
+        of(SPECIFIC_WEEK_DAY_INTERVALS, "*", new int[] {0, 2, 3, 6}),
+        of(SPECIFIC_WEEK_DAY_INTERVALS, "*", new int[] {5, 7, 1, 4}));
   }
 
   static Stream<Arguments> invalidProvider() {
