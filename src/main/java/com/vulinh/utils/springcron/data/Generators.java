@@ -112,10 +112,22 @@ class Generators {
         toTextTransformer.apply(interval.start()), toTextTransformer.apply(interval.end()));
   }
 
+  /**
+   * Generate expression for circular month ranges.
+   *
+   * @param rawList list of integers representing month ranges
+   * @return string representation of circular month ranges
+   */
   static String monthCircularRanges(List<Integer> rawList) {
     return toMultipleCircularRanges(rawList, Month::of, CircularMonth::of);
   }
 
+  /**
+   * Generate expression for circular day of week ranges.
+   *
+   * @param rawList list of integers representing day of week ranges
+   * @return string representation of circular day of week ranges
+   */
   static String dayOfWeekCircularRanges(List<Integer> rawList) {
     return toMultipleCircularRanges(
         rawList, day -> day == 0 ? DayOfWeek.SUNDAY : DayOfWeek.of(day), CircularDayOfWeek::of);
