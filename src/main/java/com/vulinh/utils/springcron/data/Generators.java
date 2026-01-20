@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 /** Utility class providing common functions for generating cron expressions. */
 class Generators {
 
-  static final String COMMA = ",";
-
   private Generators() {}
 
   /**
@@ -65,7 +63,7 @@ class Generators {
         .mapToInt(Integer::intValue)
         .mapToObj(toTextTransformer)
         .distinct()
-        .collect(Collectors.joining(COMMA));
+        .collect(Collectors.joining(CommonUtils.COMMA));
   }
 
   /**
@@ -96,7 +94,7 @@ class Generators {
 
     return IntersectedRangeMerger.mergeRanges(ranges).stream()
         .map(range -> CommonUtils.FROM_TO.formatted(range.getFrom(), range.getTo()))
-        .collect(Collectors.joining(COMMA));
+        .collect(Collectors.joining(CommonUtils.COMMA));
   }
 
   /**
@@ -148,6 +146,6 @@ class Generators {
 
     return CircularRangeMerger.mergeCircularRanges(segments).stream()
         .map(TransformedSegment::toRangeRepresent)
-        .collect(Collectors.joining(","));
+        .collect(Collectors.joining(CommonUtils.COMMA));
   }
 }

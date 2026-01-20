@@ -1,9 +1,12 @@
 package com.vulinh.utils;
 
+
 /** Shared common utility methods. */
 public class CommonUtils {
 
   public static final String FROM_TO = "%s-%s";
+
+  public static final String COMMA = ",";
 
   private CommonUtils() {}
 
