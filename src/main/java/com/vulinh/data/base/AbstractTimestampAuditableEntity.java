@@ -31,18 +31,21 @@ public abstract class AbstractTimestampAuditableEntity<I extends Serializable>
     return createdDateTime;
   }
 
-  public AbstractTimestampAuditableEntity<I> setCreatedDateTime(Instant createdDateTime) {
-    this.createdDateTime = createdDateTime;
-    return this;
-  }
-
   @Override
   public Instant getUpdatedDateTime() {
     return updatedDateTime;
   }
 
-  public AbstractTimestampAuditableEntity<I> setUpdatedDateTime(Instant updatedDateTime) {
-    this.updatedDateTime = updatedDateTime;
-    return this;
-  }
+  /**
+   * Extension of {@link AbstractEntity.AbstractEntityBuilder}
+   *
+   * @param <I> Entity's ID type
+   * @param <E> Entity type
+   * @param <B> Builder type (self type)
+   */
+  protected interface AbstractTimestampAuditableEntityBuilder<
+          I extends Serializable,
+          E extends AbstractEntity<I>,
+          B extends AbstractTimestampAuditableEntityBuilder<I, E, B>>
+      extends AbstractEntity.AbstractEntityBuilder<I, E, B> {}
 }
