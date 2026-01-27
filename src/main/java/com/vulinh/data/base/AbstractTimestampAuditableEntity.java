@@ -36,16 +36,4 @@ public abstract class AbstractTimestampAuditableEntity<I extends Serializable>
     return updatedDateTime;
   }
 
-  /**
-   * Extension of {@link AbstractEntity.AbstractEntityBuilder}
-   *
-   * @param <I> Entity's ID type
-   * @param <E> Entity type
-   * @param <B> Builder type (self type)
-   */
-  protected interface AbstractTimestampAuditableEntityBuilder<
-          I extends Serializable,
-          E extends AbstractEntity<I>,
-          B extends AbstractTimestampAuditableEntityBuilder<I, E, B>>
-      extends AbstractEntity.AbstractEntityBuilder<I, E, B> {}
 }
