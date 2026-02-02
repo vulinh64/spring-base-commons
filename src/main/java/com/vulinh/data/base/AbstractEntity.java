@@ -20,7 +20,7 @@ public abstract class AbstractEntity<I extends Serializable>
   @Serial private static final long serialVersionUID = 0L;
 
   @Override
-  public final boolean equals(Object other) {
+  public boolean equals(Object other) {
     if (this == other) {
       return true;
     }
@@ -39,7 +39,7 @@ public abstract class AbstractEntity<I extends Serializable>
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     var id = getId();
 
     // Either use the proxy class' hash code or the id's hash code
@@ -48,7 +48,7 @@ public abstract class AbstractEntity<I extends Serializable>
   }
 
   // See the link above for explanation
-  private static Class<?> getEffectiveClass(Object object) {
+  static Class<?> getEffectiveClass(Object object) {
     return object instanceof HibernateProxy proxy
         ? proxy.getHibernateLazyInitializer().getPersistentClass()
         : object.getClass();

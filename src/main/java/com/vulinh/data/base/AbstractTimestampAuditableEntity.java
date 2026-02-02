@@ -35,5 +35,4 @@ public abstract class AbstractTimestampAuditableEntity<I extends Serializable>
   public Instant getUpdatedDateTime() {
     return updatedDateTime;
   }
-
 }
