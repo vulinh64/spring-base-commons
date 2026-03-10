@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 /** Represents a base class for application-specific exceptions. */
 public abstract class ApplicationException extends RuntimeException {
 
+  // LMAO
   @Serial private static final long serialVersionUID = 0L;
 
   /**

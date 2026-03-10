@@ -46,6 +46,11 @@ public class MyP6SpyLogging extends Slf4JLogger {
       String prepared,
       String sql,
       String url) {
+    if (!LOG.isInfoEnabled()) {
+      // Do nothing when log level info is not configured
+      return;
+    }
+
     var categoryName = category.getName().toUpperCase();
 
     if (StringUtils.isBlank(sql)) {

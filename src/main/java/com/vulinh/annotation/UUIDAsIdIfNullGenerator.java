@@ -32,7 +32,8 @@ public @interface UUIDAsIdIfNullGenerator {
 
     static final UUID NIL_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-    @Serial private static final long serialVersionUID = -8834326837580306821L;
+    // Shouldn't be a problem
+    @Serial private static final long serialVersionUID = 0L;
 
     @Override
     public UUID generate(SharedSessionContractImplementor session, Object entity) {

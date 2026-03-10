@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
+@SuppressWarnings("java:S2160") // Shut up
 public abstract class AbstractTimestampAuditableEntity<I extends Serializable>
     extends AbstractEntity<I> implements InstantDateTimeAuditable {
 

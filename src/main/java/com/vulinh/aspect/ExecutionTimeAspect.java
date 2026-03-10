@@ -32,7 +32,7 @@ public class ExecutionTimeAspect {
 
   public ExecutionTimeAspect(ApplicationContext applicationContext, Environment environment) {
     this.applicationContext = applicationContext;
-    this.isVirtualThread = isVirtualThreadConfigured(environment);
+    isVirtualThread = isVirtualThreadConfigured(environment);
   }
 
   static final DateTimeFormatter READABLE_TIMESTAMP =
@@ -64,8 +64,6 @@ public class ExecutionTimeAspect {
 
     var signature = joinPoint.getSignature();
 
-    var executionDuration = Duration.between(startedTimestamp, stoppedTimestamp);
-
     // Invoking conditionally
     if (LOG.isInfoEnabled()) {
       LOG.info(
@@ -78,8 +76,8 @@ public class ExecutionTimeAspect {
                       downstream.accept(
                           argument == null ? "null" : argument.getClass().getSimpleName()))
               .collect(Collectors.joining(CommonUtils.COMMA)),
-          executionDuration.toMillis(),
-          executionDuration.toNanos(),
+          Duration.between(startedTimestamp, stoppedTimestamp).toMillis(),
+          Duration.between(startedTimestamp, stoppedTimestamp).toNanos(),
           toLocalDateTime(startedTimestamp),
           toLocalDateTime(stoppedTimestamp));
     }
@@ -100,6 +98,7 @@ public class ExecutionTimeAspect {
   }
 
   static boolean isVirtualThreadConfigured(Environment environment) {
-    return Boolean.parseBoolean(environment.getProperty("spring.threads.virtual.enabled"));
+    return Boolean.parseBoolean(environment.getProperty("spring.threads.virtual.enabled"))
+        || Thread.currentThread().isVirtual();
   }
 }

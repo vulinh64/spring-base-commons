@@ -14,6 +14,7 @@ import org.springframework.lang.NonNull;
  */
 public class ApplicationValidationException extends ApplicationException {
 
+  // HAHAHA
   @Serial private static final long serialVersionUID = -1L;
 
   /**

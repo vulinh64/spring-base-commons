@@ -14,7 +14,7 @@ The repository is located [here](https://github.com/vulinh64/spring-base-commons
 
 For now, this project is using manual versioning. To specify the version:
 
-- Change the value of static final variable `VERSION` in [this class](./src/main/java/com/vulinh/Version.java).
+- Change the value of static final variable `CURRENT_VERSION` in [this class](./src/main/java/com/vulinh/Version.java).
 
 - Update the version in the `pom.xml` file accordingly, specially at the section `<version>`.
 
