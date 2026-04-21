@@ -6,6 +6,15 @@ import java.util.UUID;
 
 public record ActionUser(UUID id, String username) implements UuidIdentifiable {
 
+  /**
+   * Sentinel {@link ActionUser} for events emitted by the system rather than a real end-user, that
+   * carried on {@link EventMessageWrapper#actionUser()} so the field is never {@code null} on the
+   * wire. Producers of system-triggered events should use this constant; consumers can recognize it
+   * by comparing {@link #id()} against the all-{@code f} UUID.
+   */
+  public static final ActionUser SYSTEM =
+      new ActionUser(UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff"), "spring-base-auth");
+
   public static ActionUserBuilder builder() {
     return new ActionUserBuilder();
   }

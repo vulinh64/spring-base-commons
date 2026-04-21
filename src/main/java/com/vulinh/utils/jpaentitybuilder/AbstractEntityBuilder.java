@@ -1,4 +1,4 @@
-package com.vulinh.utils.builder;
+package com.vulinh.utils.jpaentitybuilder;
 
 import com.vulinh.data.base.AbstractEntity;
 

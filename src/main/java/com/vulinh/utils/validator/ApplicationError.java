@@ -1,7 +1,5 @@
 package com.vulinh.utils.validator;
 
-import org.springframework.lang.NonNull;
-
 /** Represents an application error with a specific error code. */
 @FunctionalInterface
 public interface ApplicationError {
@@ -12,6 +10,5 @@ public interface ApplicationError {
    *
    * @return the non-null error code string
    */
-  @NonNull
   String getErrorCode();
 }

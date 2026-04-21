@@ -13,8 +13,8 @@ import org.hibernate.id.IdentifierGenerator;
 
 /**
  * Use this strategy only if you want to automatically generate a UUID as the ID for an entity when
- * not explicitly stating a UUID value firsthand. /* This applies when the user leaves the
- * {@code @Id} field empty.
+ * not explicitly stating a UUID value firsthand. This applies when the user leaves the {@code @Id}
+ * field empty.
  *
  * <p>Snippet to use (copy/paste it to the entity's ID field):
  *

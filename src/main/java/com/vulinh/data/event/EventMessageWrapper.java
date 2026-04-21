@@ -9,6 +9,8 @@ public record EventMessageWrapper<T>(
     UUID eventId, Instant timestamp, EventType eventType, ActionUser actionUser, T data)
     implements UuidIdentifiable {
 
+  // eventId and timestamp are assigned by the system
+  // putting external value won't do anything and will be discarded
   public EventMessageWrapper {
     eventId = UUID.randomUUID();
     timestamp = Instant.now();
