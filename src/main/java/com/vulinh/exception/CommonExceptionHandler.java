@@ -58,20 +58,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  *
  * <h2>Built-in error codes</h2>
  *
- * <p>The library ships two reserved error codes in {@link
+ * <p>The library ships some reserved error codes in {@link
  * com.vulinh.data.type.CommonServiceCodeError} that this handler (and {@link GenericResponse})
  * relies on:
  *
  * <ul>
- *   <li>{@code app.success}: {@code MESSAGE_SUCCESS}, used by {@link
- *       GenericResponse#success(Object)}.
- *   <li>{@code app.internal-server-error}: {@code MESSAGE_INTERNAL_ERROR}, used by the fallback
- *       above via {@link GenericResponse#internalServerError(Object...)}.
+ *   <li>{@code app.success} ({@link com.vulinh.data.type.CommonServiceCodeError#MESSAGE_SUCCESS}):
+ *       {@code MESSAGE_SUCCESS}, used by {@link GenericResponse#success(Object)}.
+ *   <li>{@code app.internal-server-error} ({@link
+ *       com.vulinh.data.type.CommonServiceCodeError#MESSAGE_INTERNAL_ERROR}): {@code
+ *       MESSAGE_INTERNAL_ERROR}, used by the fallback above via {@link
+ *       GenericResponse#internalServerError(Object...)}.
+ *   <li>{@code app.entity.concrete-id-missing} ({@link
+ *       com.vulinh.data.type.CommonServiceCodeError#MESSAGE_INVALID_CONCRETE_ID}): {@code
+ *       MESSAGE_INVALID_CONCRETE_ID}, carried by {@link ConcreteEntityIdMissingException} when a
+ *       {@link com.vulinh.data.base.AbstractEntity.IdType#CONCRETE} entity is observed with a
+ *       {@code null} identifier through {@code equals} / {@code hashCode}.
  * </ul>
  *
- * <p>Consuming services should provide localized values for both keys in their own resource bundles
- * (see {@link com.vulinh.locale.LocalizationBundleProvider}); otherwise responses fall back to the
- * raw codes.
+ * <p>Consuming services should provide localized values for these keys in their own resource
+ * bundles (see {@link com.vulinh.locale.LocalizationBundleProvider}); otherwise responses fall back
+ * to the raw codes.
  */
 public abstract class CommonExceptionHandler {
 
