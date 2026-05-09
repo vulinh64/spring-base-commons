@@ -1,6 +1,8 @@
 package com.vulinh.data.event;
 
 import com.vulinh.data.base.UuidIdentifiable;
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
@@ -9,11 +11,13 @@ public record EventMessageWrapper<T>(
     UUID eventId, Instant timestamp, EventType eventType, ActionUser actionUser, T data)
     implements UuidIdentifiable {
 
-  // eventId and timestamp are assigned by the system
-  // putting external value won't do anything and will be discarded
+  // Auto-generate when caller didn't supply (typical for the builder path on
+  // the publisher side). Preserve explicit values so deserialization on the
+  // consumer keeps the original eventId/timestamp from the wire — losing them
+  // would break cross-service correlation.
   public EventMessageWrapper {
-    eventId = UUID.randomUUID();
-    timestamp = Instant.now();
+    eventId = ObjectUtils.getIfNull(eventId, UUID::randomUUID);
+    timestamp = ObjectUtils.getIfNull(timestamp, Instant::now);
   }
 
   public static <T> EventMessageWrapperBuilder<T> builder() {
