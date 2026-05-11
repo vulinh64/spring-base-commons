@@ -4,9 +4,9 @@ import com.vulinh.data.type.CommonServiceCodeError;
 import java.io.Serial;
 
 /**
- * Thrown when an entity declared as {@link com.vulinh.data.base.AbstractEntity.IdType#CONCRETE}
- * exposes a {@code null} identifier through {@link com.vulinh.data.base.AbstractEntity#equals} or
- * {@link com.vulinh.data.base.AbstractEntity#hashCode}.
+ * Thrown when an entity declared as {@link com.vulinh.utils.JpaEntityUtils.IdType#CONCRETE} exposes
+ * a {@code null} identifier through {@link com.vulinh.data.base.AbstractEntity#equals} or {@link
+ * com.vulinh.data.base.AbstractEntity#hashCode}.
  */
 public class ConcreteEntityIdMissingException extends ApplicationException {
 

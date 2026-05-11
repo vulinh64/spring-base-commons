@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.vulinh.exception.ConcreteEntityIdMissingException;
+import com.vulinh.utils.JpaEntityUtils.IdType;
+import java.io.Serial;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -52,6 +54,8 @@ class AbstractEntityTest {
 
   private static final class DynamicEntity extends AbstractEntity<UUID> {
 
+    @Serial private static final long serialVersionUID = 0L;
+
     private final UUID id;
 
     private DynamicEntity(UUID id) {
@@ -66,6 +70,8 @@ class AbstractEntityTest {
 
   private static final class ConcreteEntity extends AbstractEntity<String> {
 
+    @Serial private static final long serialVersionUID = 0L;
+
     private final String id;
 
     private ConcreteEntity(String id) {
@@ -78,7 +84,7 @@ class AbstractEntityTest {
     }
 
     @Override
-    protected IdType getIdType() {
+    public IdType getIdType() {
       return IdType.CONCRETE;
     }
   }

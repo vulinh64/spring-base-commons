@@ -72,8 +72,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  *   <li>{@code app.entity.concrete-id-missing} ({@link
  *       com.vulinh.data.type.CommonServiceCodeError#MESSAGE_INVALID_CONCRETE_ID}): {@code
  *       MESSAGE_INVALID_CONCRETE_ID}, carried by {@link ConcreteEntityIdMissingException} when a
- *       {@link com.vulinh.data.base.AbstractEntity.IdType#CONCRETE} entity is observed with a
- *       {@code null} identifier through {@code equals} / {@code hashCode}.
+ *       {@link com.vulinh.utils.JpaEntityUtils.IdType#CONCRETE} entity is observed with a {@code
+ *       null} identifier through {@code equals} / {@code hashCode}.
  * </ul>
  *
  * <p>Consuming services should provide localized values for these keys in their own resource
