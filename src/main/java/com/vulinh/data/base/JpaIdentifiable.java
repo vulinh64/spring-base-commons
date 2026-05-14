@@ -1,18 +1,20 @@
-package com.vulinh.utils;
+package com.vulinh.data.base;
 
-import com.vulinh.data.base.AbstractEntity;
 import com.vulinh.exception.ConcreteEntityIdMissingException;
+import java.io.Serializable;
 import java.util.Objects;
 import org.hibernate.proxy.HibernateProxy;
 
 /**
- * JPA entity helpers, including the canonical {@link Object#equals(Object)} and {@link
- * Object#hashCode()} implementations used by {@link AbstractEntity}.
+ * JPA-flavored {@link Identifiable} that augments the contract with the notion of how the
+ * identifier is assigned ({@link IdType#DYNAMIC} vs {@link IdType#CONCRETE}), and exposes the
+ * canonical {@link Object#equals(Object)} and {@link Object#hashCode()} implementations used by
+ * {@link AbstractEntity} as the static helpers {@link #jpaEquals(JpaIdentifiable, Object)} and
+ * {@link #jpaHashCode(JpaIdentifiable)}.
  *
  * <p>Entities that want this implementation but cannot extend {@link AbstractEntity}, typically
  * because doing so would push their inheritance depth past the limit enforced by SonarQube and
- * block the build, can then call {@link #jpaEquals(AbstractEntity, Object)} and {@link
- * #jpaHashCode(AbstractEntity)} directly from their own {@code equals} / {@code hashCode}
+ * block the build, can call these helpers directly from their own {@code equals} / {@code hashCode}
  * overrides.
  *
  * <p>See this <a
@@ -21,9 +23,9 @@ import org.hibernate.proxy.HibernateProxy;
  *
  * <h2>ID generation modes</h2>
  *
- * <p>The semantics of {@link #jpaEquals(AbstractEntity, Object)} and {@link
- * #jpaHashCode(AbstractEntity)} adapt to how the entity's identifier is assigned, declared by
- * overriding {@link AbstractEntity#getIdType()}:
+ * <p>The semantics of {@link #jpaEquals(JpaIdentifiable, Object)} and {@link
+ * #jpaHashCode(JpaIdentifiable)} adapt to how the entity's identifier is assigned, declared by
+ * {@link #getIdType()}:
  *
  * <ul>
  *   <li><strong>{@link IdType#DYNAMIC}</strong> (default) — the identifier is assigned by the
@@ -45,21 +47,20 @@ import org.hibernate.proxy.HibernateProxy;
  * {@link java.util.HashSet}, or any other hash-based structure. The ID is simply the canonical
  * identity for entities, so the rule surfaces most visibly here.
  *
- * <p>Concretely, regardless of the chosen mode, the identifier returned by {@link
- * AbstractEntity#getId()} must be <em>effectively immutable</em> for the lifetime of the instance.
- * Both {@link #jpaEquals(AbstractEntity, Object)} and {@link #jpaHashCode(AbstractEntity)} derive
- * from it, so mutating the id after the entity has been placed in any hash-based collection (or
- * shared with caching, change-tracking, or persistence-context machinery) silently corrupts those
- * structures.
+ * <p>Concretely, regardless of the chosen mode, the identifier returned by {@link #getId()} must be
+ * <em>effectively immutable</em> for the lifetime of the instance. Both {@link
+ * #jpaEquals(JpaIdentifiable, Object)} and {@link #jpaHashCode(JpaIdentifiable)} derive from it, so
+ * mutating the id after the entity has been placed in any hash-based collection (or shared with
+ * caching, change-tracking, or persistence-context machinery) silently corrupts those structures.
  *
  * <p>This applies whether the key is a simple field (e.g. a {@link Long}, {@link java.util.UUID},
  * or {@link String}) or an embedded composite key (e.g. an {@link jakarta.persistence.EmbeddedId}
  * class): the underlying fields that participate in the id's {@code equals}/{@code hashCode} must
  * not change once set. Composite key classes should be designed as immutable value types.
  */
-public class JpaEntityUtils {
+public interface JpaIdentifiable<I extends Serializable> extends Identifiable<I>, Serializable {
 
-  public enum IdType {
+  enum IdType {
     /**
      * Identifier assigned by application code before the entity is persisted. Null ids are a
      * contract violation under this mode.
@@ -73,20 +74,18 @@ public class JpaEntityUtils {
   }
 
   /**
-   * Returns the entity's underlying persistent class, unwrapping any Hibernate lazy-loading proxy.
-   * For non-proxied instances this is simply {@code object.getClass()}.
+   * Returns the strategy by which this entity's identifier is assigned. Controls the semantics of
+   * {@link #jpaEquals(JpaIdentifiable, Object)} and {@link #jpaHashCode(JpaIdentifiable)}. See
+   * {@link JpaIdentifiable} for details.
    */
-  public static Class<?> getEffectiveClass(Object object) {
-    return object instanceof HibernateProxy proxy
-        ? proxy.getHibernateLazyInitializer().getPersistentClass()
-        : object.getClass();
-  }
+  IdType getIdType();
 
   /**
-   * {@link Object#equals(Object)} implementation for {@link AbstractEntity}. See that class for the
-   * full semantics across {@link IdType#DYNAMIC} and {@link IdType#CONCRETE} modes.
+   * {@link Object#equals(Object)} implementation for {@link JpaIdentifiable} entities. See {@link
+   * JpaIdentifiable} for the full semantics across {@link IdType#DYNAMIC} and {@link
+   * IdType#CONCRETE} modes.
    */
-  public static boolean jpaEquals(AbstractEntity<?> self, Object other) {
+  static boolean jpaEquals(JpaIdentifiable<?> self, Object other) {
     throwIfNullSelf(self);
 
     if (self == other) {
@@ -95,12 +94,13 @@ public class JpaEntityUtils {
 
     // getEffectiveClass takes care of Hibernate proxies
     if (!(getEffectiveClass(self) == getEffectiveClass(other)
-        && other instanceof AbstractEntity<?> ae)) {
+        && other instanceof JpaIdentifiable<?> ae)) {
       return false;
     }
 
     if (self.getIdType() == IdType.DYNAMIC) {
       var id = self.getId();
+
       // DYNAMIC + null id -> transient entity, never equal
       return id != null && Objects.equals(id, ae.getId());
     }
@@ -112,10 +112,11 @@ public class JpaEntityUtils {
   }
 
   /**
-   * {@link Object#hashCode()} implementation for {@link AbstractEntity}. See that class for the
-   * full semantics across {@link IdType#DYNAMIC} and {@link IdType#CONCRETE} modes.
+   * {@link Object#hashCode()} implementation for {@link JpaIdentifiable} entities. See {@link
+   * JpaIdentifiable} for the full semantics across {@link IdType#DYNAMIC} and {@link
+   * IdType#CONCRETE} modes.
    */
-  public static int jpaHashCode(AbstractEntity<?> self) {
+  static int jpaHashCode(JpaIdentifiable<?> self) {
     throwIfNullSelf(self);
 
     if (self.getIdType() == IdType.DYNAMIC) {
@@ -128,20 +129,26 @@ public class JpaEntityUtils {
     return self.getId().hashCode();
   }
 
-  private static void throwIfNullConcreteId(AbstractEntity<?> self) {
-    if (self.getIdType() == IdType.CONCRETE && self.getId() == null) {
-      throw new ConcreteEntityIdMissingException(
-          "CONCRETE entity %s has null id".formatted(getEffectiveClass(self).getName()));
-    }
+  /**
+   * Returns the entity's underlying persistent class, unwrapping any Hibernate lazy-loading proxy.
+   * For non-proxied instances this is simply {@code object.getClass()}.
+   */
+  static Class<?> getEffectiveClass(Object object) {
+    return object instanceof HibernateProxy proxy
+        ? proxy.getHibernateLazyInitializer().getPersistentClass()
+        : object.getClass();
   }
 
-  private static void throwIfNullSelf(AbstractEntity<?> self) {
+  private static void throwIfNullSelf(JpaIdentifiable<?> self) {
     if (self == null) {
       throw new IllegalArgumentException("self must not be null");
     }
   }
 
-  private JpaEntityUtils() {
-    throw new UnsupportedOperationException("Cannot instantiate utility class");
+  private static void throwIfNullConcreteId(JpaIdentifiable<?> self) {
+    if (self.getIdType() == IdType.CONCRETE && self.getId() == null) {
+      throw new ConcreteEntityIdMissingException(
+          "CONCRETE entity %s has null id".formatted(getEffectiveClass(self).getName()));
+    }
   }
 }

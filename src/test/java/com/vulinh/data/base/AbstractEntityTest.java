@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.vulinh.exception.ConcreteEntityIdMissingException;
-import com.vulinh.utils.JpaEntityUtils.IdType;
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.UUID;
