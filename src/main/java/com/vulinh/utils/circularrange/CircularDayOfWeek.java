@@ -1,19 +1,19 @@
 package com.vulinh.utils.circularrange;
 
 import com.vulinh.utils.CommonUtils;
-
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.function.Function;
 
 /**
  * Circular range for DayOfWeek (MONDAY to SUNDAY).
- * <p>
- * This class represents a circular range of days of the week, allowing for ranges that may wrap around
- * the end of the week (e.g., FRIDAY to MONDAY). It implements the {@link CircularRange} interface for
- * {@link DayOfWeek} values, providing a fixed cycle of all days in order from MONDAY to SUNDAY.
- * <p>
- * Use {@link #of(DayOfWeek, DayOfWeek)} to create instances.
+ *
+ * <p>This class represents a circular range of days of the week, allowing for ranges that may wrap
+ * around the end of the week (e.g., FRIDAY to MONDAY). It implements the {@link CircularRange}
+ * interface for {@link DayOfWeek} values, providing a fixed cycle of all days in order from MONDAY
+ * to SUNDAY.
+ *
+ * <p>Use {@link #of(DayOfWeek, DayOfWeek)} to create instances.
  *
  * <pre>
  *   CircularDayOfWeek range = CircularDayOfWeek.of(DayOfWeek.FRIDAY, DayOfWeek.MONDAY);

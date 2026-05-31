@@ -51,7 +51,8 @@ class AbstractEntityTest {
     assertThrows(ConcreteEntityIdMissingException.class, () -> map.put(orphan, "stored"));
   }
 
-  private static final class DynamicEntity extends AbstractEntity<UUID> {
+  private static final class DynamicEntity extends AbstractEntity<UUID>
+      implements JpaIdentifiable.DynamicJpaIdentifiable<UUID> {
 
     @Serial private static final long serialVersionUID = 0L;
 
@@ -67,7 +68,8 @@ class AbstractEntityTest {
     }
   }
 
-  private static final class ConcreteEntity extends AbstractEntity<String> {
+  private static final class ConcreteEntity extends AbstractEntity<String>
+      implements JpaIdentifiable.ConcreteJpaIdentifiable<String> {
 
     @Serial private static final long serialVersionUID = 0L;
 
@@ -80,11 +82,6 @@ class AbstractEntityTest {
     @Override
     public String getId() {
       return id;
-    }
-
-    @Override
-    public IdType getIdType() {
-      return IdType.CONCRETE;
     }
   }
 }

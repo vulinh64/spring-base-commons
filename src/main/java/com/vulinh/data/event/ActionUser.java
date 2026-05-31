@@ -32,6 +32,10 @@ public record ActionUser(UUID id, String username) implements UuidIdentifiable {
     return id;
   }
 
+  public ActionUserBuilder toBuilder() {
+    return new ActionUserBuilder().id(id).username(username);
+  }
+
   public static class ActionUserBuilder {
 
     private UUID id;

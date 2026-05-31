@@ -28,6 +28,10 @@ public record NewPostEvent(UUID postId, String title, String excerpt)
     return postId;
   }
 
+  public NewPostEventBuilder toBuilder() {
+    return new NewPostEventBuilder().postId(postId).title(title).excerpt(excerpt);
+  }
+
   public static class NewPostEventBuilder {
 
     private UUID postId;

@@ -47,6 +47,15 @@ public record NewCommentEvent(
     return commentId;
   }
 
+  public NewCommentEventBuilder toBuilder() {
+    return new NewCommentEventBuilder()
+        .postId(postId)
+        .title(title)
+        .excerpt(excerpt)
+        .commentId(commentId)
+        .content(content);
+  }
+
   public static class NewCommentEventBuilder {
 
     private UUID postId;

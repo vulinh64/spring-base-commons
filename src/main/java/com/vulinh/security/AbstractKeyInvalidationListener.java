@@ -3,8 +3,6 @@ package com.vulinh.security;
 import com.vulinh.data.event.EventMessageWrapper;
 import com.vulinh.data.event.payload.KeyInvalidatedEvent;
 import java.util.function.Consumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -30,11 +28,13 @@ import org.springframework.context.annotation.Bean;
  * }
  * }</pre>
  *
- * <p>Pair with a Spring Cloud Stream inbound binding named {@code keyInvalidated-in-0}, e.g.:
+ * <p>Pair with a Spring Cloud Stream inbound binding named {@code keyInvalidated-in-0}. The
+ * destination should be configured from {@value #KEY_INVALIDATED_TOPIC_NAME_PROPERTY}, whose
+ * default value is declared in {@code application.properties}.
  *
  * <pre>{@code
  * spring.cloud.function.definition: keyInvalidated
- * spring.cloud.stream.bindings.keyInvalidated-in-0.destination: key-invalidated
+ * spring.cloud.stream.bindings.keyInvalidated-in-0.destination: ${application-properties.message-topic.key-invalidated.topic-name}
  * spring.cloud.stream.bindings.keyInvalidated-in-0.group: ${spring.application.name}
  * }</pre>
  *
@@ -55,8 +55,8 @@ import org.springframework.context.annotation.Bean;
  */
 public abstract class AbstractKeyInvalidationListener {
 
-  private static final Logger LOGGER =
-      LoggerFactory.getLogger(AbstractKeyInvalidationListener.class);
+  public static final String KEY_INVALIDATED_TOPIC_NAME_PROPERTY =
+      "application-properties.message-topic.key-invalidated.topic-name";
 
   /**
    * Spring Cloud Stream {@link Consumer} bean that funnels the inbound event through {@link
@@ -68,14 +68,7 @@ public abstract class AbstractKeyInvalidationListener {
    */
   @Bean
   public Consumer<EventMessageWrapper<KeyInvalidatedEvent>> keyInvalidated() {
-    return wrapper -> {
-      var payload = wrapper.data();
-      try {
-        onKeyInvalidated(wrapper);
-      } catch (Exception ex) {
-        LOGGER.warn("Key-invalidation handler failed; lazy JWKS refresh will still recover", ex);
-      }
-    };
+    return this::onKeyInvalidated;
   }
 
   /**

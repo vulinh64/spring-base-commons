@@ -20,10 +20,13 @@ class CircularRangeIntersectedRangeMergerIntTest {
   @ParameterizedTest
   @MethodSource("singleRangeProvider")
   void testMergeCircularRangesSingleRange(
-      List<IntCircularRangeImpl> input, int expectedSize, String expectedStart, String expectedEnd) {
+      List<IntCircularRangeImpl> input,
+      int expectedSize,
+      String expectedStart,
+      String expectedEnd) {
     var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(expectedSize, result.size());
-    var first = result.get(0);
+    var first = result.getFirst();
     assertEquals(expectedStart, first.start());
     assertEquals(expectedEnd, first.end());
   }
@@ -34,7 +37,7 @@ class CircularRangeIntersectedRangeMergerIntTest {
       List<IntCircularRangeImpl> input, String expectedStart, String expectedEnd) {
     var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(1, result.size());
-    var first = result.get(0);
+    var first = result.getFirst();
     assertEquals(expectedStart, first.start());
     assertEquals(expectedEnd, first.end());
   }
@@ -49,7 +52,7 @@ class CircularRangeIntersectedRangeMergerIntTest {
       String expectedEnd2) {
     var result = CircularRangeMerger.mergeCircularRanges(input);
     assertEquals(2, result.size());
-    var first = result.get(0);
+    var first = result.getFirst();
     var second = result.get(1);
     assertEquals(expectedStart1, first.start());
     assertEquals(expectedEnd1, first.end());
@@ -72,42 +75,43 @@ class CircularRangeIntersectedRangeMergerIntTest {
   static Stream<Arguments> mergeToOneProvider() {
     return Stream.of(
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(0, 5), IntCircularRangeImpl.of(6, 10)),
-            "0", "10"),
+            List.of(IntCircularRangeImpl.of(0, 5), IntCircularRangeImpl.of(6, 10)), "0", "10"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(0, 8), IntCircularRangeImpl.of(7, 15)),
-            "0", "15"),
+            List.of(IntCircularRangeImpl.of(0, 8), IntCircularRangeImpl.of(7, 15)), "0", "15"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(22, 2), IntCircularRangeImpl.of(3, 6)),
-            "22", "6"),
+            List.of(IntCircularRangeImpl.of(22, 2), IntCircularRangeImpl.of(3, 6)), "22", "6"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(0, 3), IntCircularRangeImpl.of(4, 8), IntCircularRangeImpl.of(9, 12)),
-            "0", "12"),
+            List.of(
+                IntCircularRangeImpl.of(0, 3),
+                IntCircularRangeImpl.of(4, 8),
+                IntCircularRangeImpl.of(9, 12)),
+            "0",
+            "12"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(12, 15), IntCircularRangeImpl.of(16, 23)),
-            "12", "23"),
+            List.of(IntCircularRangeImpl.of(12, 15), IntCircularRangeImpl.of(16, 23)), "12", "23"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(12, 18), IntCircularRangeImpl.of(17, 21)),
-            "12", "21"),
+            List.of(IntCircularRangeImpl.of(12, 18), IntCircularRangeImpl.of(17, 21)), "12", "21"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(0, 0), IntCircularRangeImpl.of(0, 0)),
-            "0", "0"),
+            List.of(IntCircularRangeImpl.of(0, 0), IntCircularRangeImpl.of(0, 0)), "0", "0"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(0, 0), IntCircularRangeImpl.of(1, 1)),
-            "0", "1"),
+            List.of(IntCircularRangeImpl.of(0, 0), IntCircularRangeImpl.of(1, 1)), "0", "1"),
         Arguments.of(
-            List.of(IntCircularRangeImpl.of(20, 23), IntCircularRangeImpl.of(0, 19)),
-            "0", "23"));
+            List.of(IntCircularRangeImpl.of(20, 23), IntCircularRangeImpl.of(0, 19)), "0", "23"));
   }
 
   static Stream<Arguments> mergeToTwoProvider() {
     return Stream.of(
         Arguments.of(
             List.of(IntCircularRangeImpl.of(0, 3), IntCircularRangeImpl.of(5, 8)),
-            "0", "3", "5", "8"),
+            "0",
+            "3",
+            "5",
+            "8"),
         Arguments.of(
             List.of(IntCircularRangeImpl.of(18, 23), IntCircularRangeImpl.of(2, 7)),
-            "2", "7", "18", "23"));
+            "2",
+            "7",
+            "18",
+            "23"));
   }
 }
-

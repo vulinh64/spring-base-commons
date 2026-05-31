@@ -43,17 +43,17 @@ public enum WeekDayExpression implements PartExpression {
           Validators.isNotEmpty(list)
               && list.size() >= 2
               && Validators.isBetweenInclusive(
-                  list.get(0), Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX)
+                  list.getFirst(), Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX)
               && Validators.isBetweenInclusive(
                   list.get(1), Constants.MIN_NTH_OCCURRENCE, Constants.MAX_NTH_OCCURRENCE),
-      list -> "%s#%s".formatted(Constants.DAY_OF_WEEK_MAP.get(list.get(0)), list.get(1))),
+      list -> "%s#%s".formatted(Constants.DAY_OF_WEEK_MAP.get(list.getFirst()), list.get(1))),
 
   /** Expression representing the last occurrence of a specific day of the week in a month. */
   LAST_OF_MONTH(
       list ->
           Validators.isValidSingletonListWithinBounds(
               list, Constants.DAY_OF_WEEK_MIN, Constants.DAY_OF_WEEK_MAX),
-      list -> "%sL".formatted(Constants.DAY_OF_WEEK_MAP.get(list.get(0)))),
+      list -> "%sL".formatted(Constants.DAY_OF_WEEK_MAP.get(list.getFirst()))),
 
   /** Expression representing no specific care for day of weeks. */
   WEEK_DAY_NO_CARE(Validators.alwaysTrue(), Generators.noCare());

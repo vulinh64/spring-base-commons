@@ -70,7 +70,7 @@ class JsonUtilsTest {
     List<SampleObject> result = JsonUtils.toObject(json, new TypeReference<>() {});
 
     assertEquals(2, result.size());
-    assertEquals("Alice", result.get(0).name());
+    assertEquals("Alice", result.getFirst().name());
     assertEquals("Bob", result.get(1).name());
   }
 

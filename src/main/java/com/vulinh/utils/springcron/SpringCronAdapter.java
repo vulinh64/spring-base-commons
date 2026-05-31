@@ -31,7 +31,7 @@ public class SpringCronAdapter {
         SecondMinuteExpression.SPECIFIC_INTERVALS,
         SecondMinuteCronInput.builder(),
         IntervalType.INFLEXIBLE,
-            intervals);
+        intervals);
   }
 
   public static HourCronInput everyNHours(int n) {
@@ -48,7 +48,10 @@ public class SpringCronAdapter {
 
   public static HourCronInput specificHourRanges(Interval... intervals) {
     return specificIntervals(
-        HourExpression.SPECIFIC_HOUR_INTERVALS, HourCronInput.builder(), IntervalType.INFLEXIBLE, intervals);
+        HourExpression.SPECIFIC_HOUR_INTERVALS,
+        HourCronInput.builder(),
+        IntervalType.INFLEXIBLE,
+        intervals);
   }
 
   public static DayCronInput everyNDays(int n) {
@@ -65,7 +68,10 @@ public class SpringCronAdapter {
 
   public static DayCronInput specificDayRanges(Interval... intervals) {
     return specificIntervals(
-        DayExpression.SPECIFIC_DAY_INTERVALS, DayCronInput.builder(), IntervalType.INFLEXIBLE, intervals);
+        DayExpression.SPECIFIC_DAY_INTERVALS,
+        DayCronInput.builder(),
+        IntervalType.INFLEXIBLE,
+        intervals);
   }
 
   public static DayCronInput nToLastDayOfMonth(int n) {
@@ -145,7 +151,10 @@ public class SpringCronAdapter {
   }
 
   private static <P extends PartExpression, C extends CronInput<P>> C specificIntervals(
-          P expression, CronInputBuilder<P, C> builder, IntervalType intervalType, Interval... intervals) {
+      P expression,
+      CronInputBuilder<P, C> builder,
+      IntervalType intervalType,
+      Interval... intervals) {
     return builder
         .expression(expression)
         .arguments(

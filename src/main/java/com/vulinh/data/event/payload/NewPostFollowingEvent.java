@@ -34,6 +34,10 @@ public record NewPostFollowingEvent(UUID postId, String title, String excerpt)
     return postId;
   }
 
+  public NewPostFollowingEventBuilder toBuilder() {
+    return new NewPostFollowingEventBuilder().postId(postId).title(title).excerpt(excerpt);
+  }
+
   public static class NewPostFollowingEventBuilder {
 
     private UUID postId;

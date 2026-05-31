@@ -40,6 +40,16 @@ public record AccountBasicResponse(
     return new AccountBasicResponse(id, username, firstName, lastName, email, enabled);
   }
 
+  public Builder toBuilder() {
+    return new Builder()
+        .id(id)
+        .username(username)
+        .firstName(firstName)
+        .lastName(lastName)
+        .email(email)
+        .isEnabled(isEnabled);
+  }
+
   public static final class Builder {
 
     private UUID id;
@@ -77,7 +87,7 @@ public record AccountBasicResponse(
     }
 
     public Builder isEnabled(boolean enabled) {
-      isEnabled = enabled;
+      this.isEnabled = enabled;
       return this;
     }
 

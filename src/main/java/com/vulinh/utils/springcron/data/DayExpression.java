@@ -1,7 +1,6 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -43,7 +42,7 @@ public enum DayExpression implements PartExpression {
       list ->
           Validators.isValidSingletonListWithinBounds(
               list, Constants.DAY_OF_MONTH_MIN, Constants.DAY_OF_MONTH_MAX),
-      list -> String.format("L-%d", list.get(0))),
+      list -> String.format("L-%d", list.getFirst())),
 
   /** Expression representing no specific care for day of months. */
   DAY_NO_CARE(Validators.alwaysTrue(), Generators.noCare());

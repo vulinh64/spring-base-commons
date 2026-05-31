@@ -3,8 +3,9 @@ package com.vulinh.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.vulinh.utils.Equivalence.Creator;
-import com.vulinh.utils.Equivalence.EqualityDeepness;
+import com.vulinh.utils.equivalence.Equivalence;
+import com.vulinh.utils.equivalence.Equivalence.Creator;
+import com.vulinh.utils.equivalence.EqualityDeepness;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

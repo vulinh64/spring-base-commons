@@ -2,8 +2,9 @@ package com.vulinh.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.vulinh.utils.Equivalence.Creator;
-import com.vulinh.utils.Equivalence.EqualityDeepness;
+import com.vulinh.utils.equivalence.Equivalence;
+import com.vulinh.utils.equivalence.Equivalence.Creator;
+import com.vulinh.utils.equivalence.EqualityDeepness;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;

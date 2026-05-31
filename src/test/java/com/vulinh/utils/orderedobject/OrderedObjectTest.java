@@ -102,12 +102,13 @@ class OrderedObjectTest {
         () -> {
           var testList = new ArrayList<>(TEST_LIST);
 
-          testList.remove(0);
+          testList.removeFirst();
 
           IntStream.range(0, testList.size())
               .mapToObj(indices -> Wrapper.wrap(testList.get(indices), indices))
               .sorted(
-                  Wrapper.firstCompareBy(TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE))
+                  Wrapper.firstCompareBy(
+                      TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE))
               .map(OrderedObject::unwrap)
               .toList();
         });
@@ -115,7 +116,10 @@ class OrderedObjectTest {
     assertDoesNotThrow(
         () -> {
           Wrapper.toSortedList(
-              Collections.emptyList(), TestUser::name, SortingOrder.DESCENDING, NullsOrder.NULLS_HOSTILE);
+              Collections.emptyList(),
+              TestUser::name,
+              SortingOrder.DESCENDING,
+              NullsOrder.NULLS_HOSTILE);
         });
   }
 
@@ -137,10 +141,11 @@ class OrderedObjectTest {
 
     testList.add(new TestUser(6, null, 25));
     testList.add(new TestUser(7, null, 26));
-    testList.add(0, new TestUser(8, null, 28));
-    testList.add(0, new TestUser(8, "X", 29));
+    testList.addFirst(new TestUser(8, null, 28));
+    testList.addFirst(new TestUser(8, "X", 29));
 
     assertNotNull(
-        Wrapper.toSortedList(testList, TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE));
+        Wrapper.toSortedList(
+            testList, TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE));
   }
 }

@@ -1,0 +1,5 @@
+repositoryUrl=https://repo1.maven.org/maven2
+groupPath=com/google/googlejavaformat
+artifactId=google-java-format
+classifier=all-deps
+version=1.35.0

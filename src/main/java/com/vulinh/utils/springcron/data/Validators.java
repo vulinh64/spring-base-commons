@@ -40,7 +40,7 @@ class Validators {
    */
   static boolean isValidSingletonListWithinBounds(
       List<Integer> list, int lowerBound, int upperBound) {
-    return isNotEmpty(list) && isBetweenInclusive(list.get(0), lowerBound, upperBound);
+    return isNotEmpty(list) && isBetweenInclusive(list.getFirst(), lowerBound, upperBound);
   }
 
   /**

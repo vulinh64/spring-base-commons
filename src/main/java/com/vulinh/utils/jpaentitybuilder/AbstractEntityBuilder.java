@@ -1,7 +1,6 @@
 package com.vulinh.utils.jpaentitybuilder;
 
 import com.vulinh.data.base.AbstractEntity;
-
 import java.io.Serializable;
 
 /**
@@ -27,4 +26,14 @@ public interface AbstractEntityBuilder<
    * @return the concreted entity
    */
   E build();
+
+  /**
+   * Return a new builder initialized with this builder's current values.
+   *
+   * <p>Implementations should use this when the caller needs to branch from an existing builder
+   * without mutating it.
+   *
+   * @return a new builder initialized from this builder
+   */
+  B toBuilder();
 }

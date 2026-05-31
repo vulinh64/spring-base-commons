@@ -145,6 +145,18 @@ public record GenericResponse<T>(String errorCode, String displayMessage, T data
   }
 
   /**
+   * Return a new {@link Builder} initialized with the current instance's values.
+   *
+   * @return a new {@link Builder} with current values
+   */
+  public GenericResponse.Builder<T> toBuilder() {
+    return new GenericResponse.Builder<T>()
+        .errorCode(errorCode)
+        .displayMessage(displayMessage)
+        .data(data);
+  }
+
+  /**
    * Mutable, fluent builder for {@link GenericResponse}. Useful when neither {@link
    * GenericResponse#success(Object)} nor {@link GenericResponse#toError(ApplicationException)}
    * fits, or when fields need to be set incrementally.

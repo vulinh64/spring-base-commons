@@ -50,8 +50,7 @@ public record TransformedSegment(String start, String end, boolean isFullRange) 
     return new TransformedSegment(
         transformer.apply(first),
         transformer.apply(second),
-        first.equals(sortedElements.get(0))
-            && second.equals(sortedElements.get(sortedElements.size() - 1)));
+        first.equals(sortedElements.getFirst()) && second.equals(sortedElements.getLast()));
   }
 
   public String toRangeRepresent() {

@@ -29,7 +29,7 @@ class CircularRangeIntersectedRangeMergerComparatorTest {
 
     assertAll(
         () -> {
-          var range1 = mergedRanges.get(0);
+          var range1 = mergedRanges.getFirst();
 
           assertEquals('a', range1.getFrom());
           assertEquals('f', range1.getTo());

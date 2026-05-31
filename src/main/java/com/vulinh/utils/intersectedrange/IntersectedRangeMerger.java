@@ -45,7 +45,7 @@ public class IntersectedRangeMerger {
     // We don't want to see array reallocation during merging
     var mergedRanges = new LinkedList<Range<T>>();
 
-    var currentRange = sortableRanges.get(0);
+    var currentRange = sortableRanges.getFirst();
 
     for (var i = 1; i < sortableRanges.size(); i++) {
       var nextRange = sortableRanges.get(i);

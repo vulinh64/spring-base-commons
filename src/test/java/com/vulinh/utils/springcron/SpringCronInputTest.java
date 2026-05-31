@@ -78,7 +78,8 @@ class SpringCronInputTest {
         SpringCronInput.builder()
             .secondInput(SpringCronAdapter.betweenSecondsMinutes(0, 30))
             .minuteInput(
-                SpringCronAdapter.specificSecondMinuteIntervals(Interval.of(10, 20), Interval.of(40, 50)))
+                SpringCronAdapter.specificSecondMinuteIntervals(
+                    Interval.of(10, 20), Interval.of(40, 50)))
             .dayInput(SpringCronAdapter.nToLastDayOfMonth(5))
             .monthInput(SpringCronAdapter.specificMonths(Month.JANUARY, Month.FEBRUARY))
             .weekDayInput(SpringCronAdapter.betweenWeekDays(DayOfWeek.MONDAY, DayOfWeek.FRIDAY))

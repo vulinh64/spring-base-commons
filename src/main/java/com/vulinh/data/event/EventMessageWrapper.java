@@ -1,11 +1,10 @@
 package com.vulinh.data.event;
 
 import com.vulinh.data.base.UuidIdentifiable;
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+import org.apache.commons.lang3.ObjectUtils;
 
 public record EventMessageWrapper<T>(
     UUID eventId, Instant timestamp, EventType eventType, ActionUser actionUser, T data)
@@ -59,12 +58,34 @@ public record EventMessageWrapper<T>(
     return eventId;
   }
 
+  public EventMessageWrapperBuilder<T> toBuilder() {
+    return new EventMessageWrapperBuilder<T>()
+        .eventId(eventId)
+        .timestamp(timestamp)
+        .eventType(eventType)
+        .actionUser(actionUser)
+        .data(data);
+  }
+
   public static class EventMessageWrapperBuilder<T> {
+
+    private UUID eventId;
+    private Instant timestamp;
     private EventType eventType;
     private ActionUser actionUser;
     private T data;
 
     EventMessageWrapperBuilder() {}
+
+    public EventMessageWrapperBuilder<T> eventId(UUID eventId) {
+      this.eventId = eventId;
+      return this;
+    }
+
+    public EventMessageWrapperBuilder<T> timestamp(Instant timestamp) {
+      this.timestamp = timestamp;
+      return this;
+    }
 
     public EventMessageWrapperBuilder<T> eventType(EventType eventType) {
       this.eventType = eventType;
@@ -82,7 +103,7 @@ public record EventMessageWrapper<T>(
     }
 
     public EventMessageWrapper<T> build() {
-      return new EventMessageWrapper<>(null, null, eventType, actionUser, data);
+      return new EventMessageWrapper<>(eventId, timestamp, eventType, actionUser, data);
     }
   }
 }

@@ -26,7 +26,7 @@ class CircularRangeIntersectedRangeMergerDayOfWeekTest {
 
     assertEquals(expectedSize, result.size());
 
-    var first = result.get(0);
+    var first = result.getFirst();
 
     assertEquals(expectedStart, first.start());
     assertEquals(expectedEnd, first.end());
@@ -40,7 +40,7 @@ class CircularRangeIntersectedRangeMergerDayOfWeekTest {
 
     assertEquals(1, result.size());
 
-    var first = result.get(0);
+    var first = result.getFirst();
 
     assertEquals(expectedStart, first.start());
     assertEquals(expectedEnd, first.end());
@@ -58,7 +58,7 @@ class CircularRangeIntersectedRangeMergerDayOfWeekTest {
 
     assertEquals(2, result.size());
 
-    var first = result.get(0);
+    var first = result.getFirst();
     var second = result.get(1);
 
     assertEquals(expectedStart1, first.start());

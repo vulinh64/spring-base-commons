@@ -25,11 +25,4 @@ public abstract class AbstractEntity<I extends Serializable> implements JpaIdent
   public final int hashCode() {
     return JpaIdentifiable.jpaHashCode(this);
   }
-
-  // Override this if your entity use preset ID
-  // (ID that is assigned manually and not by JPA providers)
-  @Override
-  public IdType getIdType() {
-    return IdType.DYNAMIC;
-  }
 }

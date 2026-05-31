@@ -47,7 +47,7 @@ class Generators {
    * @return A string in the format *&#47N, where N is the first element of the list.
    */
   static String everyNthExpression(List<Integer> list) {
-    return "*/%s".formatted(list.get(0));
+    return "*/%s".formatted(list.getFirst());
   }
 
   /**
@@ -76,7 +76,7 @@ class Generators {
    */
   static String betweenExpression(List<Integer> list, IntFunction<String> toTextTransformer) {
     return createSingleInterval(
-        toTextTransformer, Interval.of(list.get(0), list.get(1), IntervalType.INFLEXIBLE));
+        toTextTransformer, Interval.of(list.getFirst(), list.get(1), IntervalType.INFLEXIBLE));
   }
 
   /**

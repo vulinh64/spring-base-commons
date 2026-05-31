@@ -28,6 +28,12 @@ public record NewSubscriberEvent(UUID subscribedUserId, String subscribedUsernam
     return subscribedUserId;
   }
 
+  public NewSubscriberEventBuilder toBuilder() {
+    return new NewSubscriberEventBuilder()
+        .subscribedUserId(subscribedUserId)
+        .subscribedUsername(subscribedUsername);
+  }
+
   public static class NewSubscriberEventBuilder {
 
     private UUID subscribedUserId;

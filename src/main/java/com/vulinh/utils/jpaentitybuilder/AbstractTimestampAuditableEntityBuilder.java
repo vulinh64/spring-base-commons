@@ -1,7 +1,6 @@
 package com.vulinh.utils.jpaentitybuilder;
 
 import com.vulinh.data.base.AbstractEntity;
-
 import java.io.Serializable;
 
 /**

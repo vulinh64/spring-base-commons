@@ -1,11 +1,8 @@
-package com.vulinh.utils;
+package com.vulinh.utils.equivalence;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,99 +54,46 @@ import org.apache.commons.lang3.StringUtils;
  * {@link EqualityDeepness}.
  *
  * @param <T> The type of the wrapped value.
- * @param value The original value object. This object is stored, but its {@code equals} and {@code
- *     hashCode} methods are not directly used for the equivalence comparison of this wrapper.
- * @param id The extracted identifier from the {@code value}, used for {@code equals} and {@code
- *     hashCode}. Its comparison and hashing are governed by the chosen {@code equalityDeepness}.
- *     <b>Crucially, this object should be immutable or effectively immutable</b> once the {@link
- *     Equivalence} instance is created to ensure consistent behavior, especially in collections
- *     (see class-level caution).
- * @param equalityDeepness The strategy for comparing the extracted {@code id} values and
- *     calculating its hash.
- * @param hash The cached hash code of the {@code id}, calculated according to the specified {@link
- *     EqualityDeepness}.
  */
-public record Equivalence<T>(T value, Object id, EqualityDeepness equalityDeepness, int hash) {
+public final class Equivalence<T> {
+
+  private final T value;
+  private final Object id;
+  private final EqualityDeepness equalityDeepness;
+  private final int hash;
+
+  private Equivalence(T value, Object id, EqualityDeepness equalityDeepness) {
+    this.value = value;
+    this.id = id;
+    this.equalityDeepness = equalityDeepness;
+    this.hash = equalityDeepness.calculateHashCode(id);
+  }
 
   /**
-   * Defines the strategy for comparing extracted ID objects and calculating their hash codes. This
-   * allows for choosing between shallow or deep equality semantics, particularly for arrays.
+   * Return the original value object.
+   *
+   * @return the original value object
    */
-  public enum EqualityDeepness {
+  public T value() {
+    return value;
+  }
 
-    /**
-     * Uses {@code equals(Object, Object)} for ID comparison and {@code hashCode(Object)} for hash
-     * code calculation. This performs a shallow comparison for arrays (i.e., compares array
-     * references, not contents).
-     */
-    SHALLOW_EQUAL(Objects::equals, Objects::hashCode),
+  /**
+   * Return the extracted identifier used by {@link #equals(Object)} and {@link #hashCode()}.
+   *
+   * @return the extracted identifier
+   */
+  public Object id() {
+    return id;
+  }
 
-    /**
-     * Uses {@code deepEquals(Object, Object)} for ID comparison and a custom deep hash code
-     * calculation ({@link #handleGetHashCode(Object)}) for arrays. This is suitable for IDs that
-     * are arrays where content equality is desired.
-     */
-    DEEP_EQUAL(Objects::deepEquals, EqualityDeepness::handleGetHashCode);
-
-    EqualityDeepness(
-        BiPredicate<Object, Object> idComparator, ToIntFunction<Object> hashCalculator) {
-      this.idComparator = idComparator;
-      this.hashCalculator = hashCalculator;
-    }
-
-    /**
-     * Calculates a hash code for an object, with special handling for arrays. For arrays, it uses
-     * the appropriate {@code Arrays.hashCode} for primitive arrays or {@code
-     * deepHashCode(Object[])} for object arrays to ensure content-based hashing. For non-array
-     * objects, it delegates to {@code hashCode(Object)}.
-     *
-     * @param object The object to hash.
-     * @return The hash code.
-     */
-    static int handleGetHashCode(Object object) {
-      if (object.getClass().isArray()) {
-        return switch (object) {
-          case int[] intArray -> Arrays.hashCode(intArray);
-          case long[] longArray -> Arrays.hashCode(longArray);
-          case byte[] byteArray -> Arrays.hashCode(byteArray);
-          case short[] shortArray -> Arrays.hashCode(shortArray);
-          case boolean[] booleanArray -> Arrays.hashCode(booleanArray);
-          case char[] charArray -> Arrays.hashCode(charArray);
-          case double[] doubleArray -> Arrays.hashCode(doubleArray);
-          case float[] floatArray -> Arrays.hashCode(floatArray);
-          default -> Arrays.deepHashCode((Object[]) object);
-        };
-      }
-
-      return Objects.hashCode(object);
-    }
-
-    /** The predicate used to compare two ID objects for equality. */
-    final BiPredicate<Object, Object> idComparator;
-
-    /** The function used to calculate the hash code of an ID object. */
-    final ToIntFunction<Object> hashCalculator;
-
-    /**
-     * Compares two ID objects for equality using the configured strategy.
-     *
-     * @param id1 The first ID object.
-     * @param id2 The second ID object.
-     * @return {@code true} if the IDs are considered equal, {@code false} otherwise.
-     */
-    boolean compareId(Object id1, Object id2) {
-      return idComparator.test(id1, id2);
-    }
-
-    /**
-     * Calculates the hash code of an ID object using the configured strategy.
-     *
-     * @param object The ID object.
-     * @return The hash code.
-     */
-    int calculateHashCode(Object object) {
-      return hashCalculator.applyAsInt(object);
-    }
+  /**
+   * Return the strategy used to compare and hash extracted identifiers.
+   *
+   * @return the equality deepness strategy
+   */
+  public EqualityDeepness equalityDeepness() {
+    return equalityDeepness;
   }
 
   /**
@@ -211,7 +155,7 @@ public record Equivalence<T>(T value, Object id, EqualityDeepness equalityDeepne
 
       var id = Objects.requireNonNull(idExtractor.apply(value), "ID cannot be null");
 
-      return new Equivalence<>(value, id, equalityDeepness, equalityDeepness.calculateHashCode(id));
+      return new Equivalence<>(value, id, equalityDeepness);
     }
 
     /**

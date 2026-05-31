@@ -61,8 +61,8 @@ class CircularRangeIntersectedRangeMergerTest {
 
     assertAll(
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(BASE_TIME, result.get(0).getFrom()),
-        () -> assertEquals(BASE_TIME.plusHours(3), result.get(0).getTo()));
+        () -> assertEquals(BASE_TIME, result.getFirst().getFrom()),
+        () -> assertEquals(BASE_TIME.plusHours(3), result.getFirst().getTo()));
   }
 
   @Test
@@ -93,7 +93,7 @@ class CircularRangeIntersectedRangeMergerTest {
         () ->
             assertEquals(
                 Range.<LocalDateTime>builder().from(BASE_TIME).to(BASE_TIME.plusHours(4)).build(),
-                result.get(0)),
+                result.getFirst()),
         () ->
             assertEquals(
                 Range.<LocalDateTime>builder()
@@ -126,7 +126,7 @@ class CircularRangeIntersectedRangeMergerTest {
         () ->
             assertEquals(
                 Range.<LocalDateTime>builder().from(BASE_TIME).to(BASE_TIME.plusHours(5)).build(),
-                result.get(0)));
+                result.getFirst()));
   }
 
   @Test
@@ -145,6 +145,6 @@ class CircularRangeIntersectedRangeMergerTest {
         () ->
             assertEquals(
                 Range.<LocalDateTime>builder().from(BASE_TIME).to(BASE_TIME.plusHours(4)).build(),
-                result.get(0)));
+                result.getFirst()));
   }
 }

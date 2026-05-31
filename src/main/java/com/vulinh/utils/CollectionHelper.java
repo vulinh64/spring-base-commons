@@ -14,11 +14,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Small grab-bag of collection helpers used across services.
+ * Provides a set of utility methods for common collection operations, aiming to simplify and
+ * streamline collection handling across various services.
  *
- * <p>Named {@code CollectionHelper} rather than {@code CollectionUtils} to avoid clashing with the
- * many same-named utility classes shipped by Spring, Apache Commons, and Guava (wildcard imports
- * across those libraries make the {@code Utils} variant ambiguous to read).
+ * <p>This class is named {@code CollectionHelper} instead of {@code CollectionUtils} to prevent
+ * naming conflicts with similar utility classes found in popular libraries like Spring, Apache
+ * Commons, and Guava. This naming convention helps avoid ambiguity, especially when using wildcard
+ * imports.
  */
 public class CollectionHelper {
 
@@ -95,6 +97,9 @@ public class CollectionHelper {
    */
   public static <C extends Collection<?>> C emptyCollectionIfNull(
       C collection, Supplier<? extends C> emptySupplier) {
-    return collection == null ? emptySupplier.get() : collection;
+    return collection == null
+        ? CommonUtils.throwsIfNull(
+            emptySupplier.get(), () -> new IllegalArgumentException("Empty value from supplier"))
+        : collection;
   }
 }

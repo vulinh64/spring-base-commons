@@ -1,7 +1,6 @@
 package com.vulinh.utils.springcron.data;
 
 import com.vulinh.utils.springcron.PartExpression;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;

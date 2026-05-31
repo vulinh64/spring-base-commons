@@ -17,6 +17,24 @@ import org.hibernate.proxy.HibernateProxy;
  * block the build, can call these helpers directly from their own {@code equals} / {@code hashCode}
  * overrides.
  *
+ * <h2>Choosing an ID mode</h2>
+ *
+ * <p>The root {@link JpaIdentifiable} interface declares {@link #getIdType()} but does not choose a
+ * mode. Implementations may either override {@link #getIdType()} directly, or implement one of the
+ * nested shortcut interfaces:
+ *
+ * <pre>{@code
+ * public class MyEntity extends AbstractEntity<UUID>
+ *     implements JpaIdentifiable.DynamicJpaIdentifiable<UUID> {
+ *   // getIdType() is inherited from DynamicJpaIdentifiable
+ * }
+ * }</pre>
+ *
+ * <p>This works because Java default methods inherited from interfaces can satisfy an abstract
+ * interface method. It is legal Java, but can be surprising because the implementation comes from
+ * the extra marker-like interface rather than the superclass. When explicitness is more important
+ * than brevity, override {@link #getIdType()} in the entity instead.
+ *
  * <p>See this <a
  * href="https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/">Guide
  * on How to Implement JPA Entities equals() and hashCode()</a> for more information.
@@ -59,6 +77,51 @@ import org.hibernate.proxy.HibernateProxy;
  * not change once set. Composite key classes should be designed as immutable value types.
  */
 public interface JpaIdentifiable<I extends Serializable> extends Identifiable<I>, Serializable {
+
+  /**
+   * Shortcut interface for entities whose identifiers are assigned by the persistence provider.
+   *
+   * <p>Implementing this interface supplies {@link #getIdType()} via a Java default method, so a
+   * concrete entity can satisfy the {@link JpaIdentifiable} contract without writing the same
+   * method body repeatedly:
+   *
+   * <pre>{@code
+   * public class Post extends AbstractEntity<UUID>
+   *     implements JpaIdentifiable.DynamicJpaIdentifiable<UUID> {
+   * }
+   * }</pre>
+   *
+   * <p>Use this when the extra interface in the class declaration is acceptable to your team. If it
+   * looks too indirect for a particular entity, override {@link #getIdType()} directly and return
+   * {@link IdType#DYNAMIC}.
+   *
+   * @param <I> identifier type
+   */
+  interface DynamicJpaIdentifiable<I extends Serializable> extends JpaIdentifiable<I> {
+
+    @Override
+    default IdType getIdType() {
+      return IdType.DYNAMIC;
+    }
+  }
+
+  /**
+   * Shortcut interface for entities whose identifiers are assigned by application code before
+   * persistence.
+   *
+   * <p>Implementing this interface supplies {@link #getIdType()} via a Java default method. Use it
+   * for entities that must use {@link IdType#CONCRETE} semantics without repeating the same
+   * override in each class. A {@code null} identifier is a contract violation for this mode.
+   *
+   * @param <I> identifier type
+   */
+  interface ConcreteJpaIdentifiable<I extends Serializable> extends JpaIdentifiable<I> {
+
+    @Override
+    default IdType getIdType() {
+      return IdType.CONCRETE;
+    }
+  }
 
   enum IdType {
     /**

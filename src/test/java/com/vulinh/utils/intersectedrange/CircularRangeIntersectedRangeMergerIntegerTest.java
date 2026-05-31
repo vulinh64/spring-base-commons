@@ -38,7 +38,7 @@ class CircularRangeIntersectedRangeMergerIntegerTest {
 
     assertEquals(1, result.size());
 
-    var first = result.get(0);
+    var first = result.getFirst();
 
     assertAll(() -> assertEquals(1, first.getFrom()), () -> assertEquals(7, first.getTo()));
   }
@@ -72,7 +72,7 @@ class CircularRangeIntersectedRangeMergerIntegerTest {
 
     assertAll(
         () -> assertEquals(3, result.size()),
-        () -> assertEquals(Range.<Integer>builder().from(1).to(4).build(), result.get(0)),
+        () -> assertEquals(Range.<Integer>builder().from(1).to(4).build(), result.getFirst()),
         () -> assertEquals(Range.<Integer>builder().from(6).to(10).build(), result.get(1)),
         () -> assertEquals(Range.<Integer>builder().from(12).to(14).build(), result.get(2)));
   }
@@ -87,7 +87,7 @@ class CircularRangeIntersectedRangeMergerIntegerTest {
 
     assertAll(
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(Range.<Integer>builder().from(1).to(10).build(), result.get(0)));
+        () -> assertEquals(Range.<Integer>builder().from(1).to(10).build(), result.getFirst()));
   }
 
   @Test
@@ -100,6 +100,6 @@ class CircularRangeIntersectedRangeMergerIntegerTest {
 
     assertAll(
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(Range.<Integer>builder().from(1).to(10).build(), result.get(0)));
+        () -> assertEquals(Range.<Integer>builder().from(1).to(10).build(), result.getFirst()));
   }
 }
