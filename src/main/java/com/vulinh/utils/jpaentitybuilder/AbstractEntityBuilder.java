@@ -23,17 +23,7 @@ public interface AbstractEntityBuilder<
   /**
    * Finalizing the entity building process.
    *
-   * @return the concreted entity
+   * @return the concrete entity
    */
   E build();
-
-  /**
-   * Return a new builder initialized with this builder's current values.
-   *
-   * <p>Implementations should use this when the caller needs to branch from an existing builder
-   * without mutating it.
-   *
-   * @return a new builder initialized from this builder
-   */
-  B toBuilder();
 }
