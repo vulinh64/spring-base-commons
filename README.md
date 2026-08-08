@@ -10,13 +10,37 @@ However, it will introduce some mental overheads for new developers. Consult eac
 
 The repository is located [here](https://github.com/vulinh64/spring-base-commons).
 
+## Versioning
+
+For now, this project is using manual versioning. To specify the version:
+
+- Update the version in the `pom.xml` file accordingly, specially at the section `<version>`.
+
+- Commit and push the changes.
+
+- Create a new tag with the version number (either on GitHub or using Git commands).
+
+## Regarding Pre-configured Public API Endpoints
+
+`SecurityPathUtils.publicApi(...)` builds a public Spring Security matcher from four sources:
+
+* Every effective Actuator endpoint, discovered through `EndpointRequest.toAnyEndpoint()`.
+
+* The default springdoc OpenAPI paths: `/swagger-ui`, `/swagger-ui/**`, `/swagger-ui.html`, and `/v3/api-docs/**`.
+
+* The application-specific URL patterns returned by `PublicSecurityPath.getNoAuthUrls()`.
+
+* The method-specific URL patterns returned by `PublicSecurityPath.getNoAuthMethodUrls()`.
+
+Applications that customize springdoc paths should add their custom paths through `getNoAuthUrls()`. WebJar paths are intentionally not pre-configured and should likewise be supplied by the consuming application when needed.
+
 ## Local Development
 
 When working on this library locally, install it into your local Maven repository before running the dependent projects:
 
-- **Windows:** run `.\mvnw.cmd clean install`
+* **Windows:** run `.\mvnw.cmd clean install`
 
-- **Linux / macOS:** run `./mvnw clean install`
+* **Linux / macOS:** run `./mvnw clean install`
 
 This publishes the current `spring-base-commons` artifact version to your local `.m2` repository, allowing sibling projects such as `spring-base-auth`, `spring-base`, and `spring-base-event` to resolve it.
 
@@ -30,16 +54,6 @@ git checkout <version-tag>
 On Windows, use `.\mvnw.cmd clean install` instead.
 
 Each installed version is stored separately in `.m2` by Maven coordinates, so installing one tagged version does not overwrite other versions.
-
-## Versioning
-
-For now, this project is using manual versioning. To specify the version:
-
-- Update the version in the `pom.xml` file accordingly, specially at the section `<version>`.
-
-- Commit and push the changes.
-
-- Create a new tag with the version number (either on GitHub or using Git commands).
 
 |                ![pepe-sad](pepe-sad.png)                |
 |:-------------------------------------------------------:|
