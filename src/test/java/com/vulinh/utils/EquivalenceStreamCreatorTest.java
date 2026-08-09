@@ -2,8 +2,8 @@ package com.vulinh.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.vulinh.utils.equivalence.Equivalence.Creator;
 import com.vulinh.utils.equivalence.EqualityDeepness;
+import com.vulinh.utils.equivalence.Equivalence.Creator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

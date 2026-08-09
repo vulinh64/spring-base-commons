@@ -2,14 +2,15 @@ package com.vulinh.utils.json;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.vulinh.utils.JsonUtils;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
 
 class JsonUtilsTest {
 
@@ -125,7 +126,7 @@ class JsonUtilsTest {
 
   @Test
   void testDatesShouldBeSerializedAsISOStrings() {
-    var obj = new ObjectWithDate("Alice", LocalDate.of(2000, 1, 15));
+    var obj = new ObjectWithDate("Alice", LocalDate.of(2000, Month.JANUARY, 15));
 
     var json = JsonUtils.toMinimizedJSON(obj);
 
@@ -140,7 +141,7 @@ class JsonUtilsTest {
 
   @Test
   void testDatesShouldRoundTripCorrectly() {
-    var original = new ObjectWithDate("Alice", LocalDate.of(2000, 1, 15));
+    var original = new ObjectWithDate("Alice", LocalDate.of(2000, Month.JANUARY, 15));
 
     var json = JsonUtils.toMinimizedJSON(original);
     var deserialized = JsonUtils.toObject(json, ObjectWithDate.class);
@@ -162,7 +163,7 @@ class JsonUtilsTest {
 
   @Test
   void testMapperShouldHaveDatesAsTimestampsDisabled() {
-    assertFalse(JsonUtils.delegate().isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS));
+    assertFalse(JsonUtils.delegate().isEnabled(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS));
   }
 
   @Test

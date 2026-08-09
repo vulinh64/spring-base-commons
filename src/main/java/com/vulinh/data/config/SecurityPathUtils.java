@@ -2,7 +2,7 @@ package com.vulinh.data.config;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.security.autoconfigure.actuate.web.servlet.EndpointRequest;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
@@ -55,10 +55,8 @@ public final class SecurityPathUtils {
    * @param http the security builder to configure
    * @param matcher paths handled by the chain
    * @return the configured security builder
-   * @throws Exception if Spring Security rejects the configuration
    */
-  public static HttpSecurity baseStateless(HttpSecurity http, RequestMatcher matcher)
-      throws Exception {
+  public static HttpSecurity baseStateless(HttpSecurity http, RequestMatcher matcher) {
     return http.securityMatcher(matcher)
         .sessionManagement(
             sessionManagementConfigurer ->

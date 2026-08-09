@@ -5,7 +5,7 @@
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base-commons</artifactId>
-    <version>3.2.0</version>
+    <version>4.0.0</version>
 
     <name>spring-base-commons</name>
 
@@ -17,12 +17,10 @@
 
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <fmt-maven-plugin.version>2.29</fmt-maven-plugin.version>
 
         <!-- https://mvnrepository.com/artifact/io.github.openfeign.querydsl/querydsl-core/versions -->
-        <openfeign.querydsl.version>7.1</openfeign.querydsl.version>
-
-        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core/versions -->
-        <hibernate.version>6.6.41.Final</hibernate.version>
+        <openfeign.querydsl.version>7.5</openfeign.querydsl.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -31,10 +29,11 @@
         <p6spy.version>3.9.1</p6spy.version>
 
         <!-- Imported as a BOM below to compile against a tested Spring ecosystem baseline. -->
-        <spring-boot.version>3.5.16</spring-boot.version>
+        <spring-boot.version>4.1.0</spring-boot.version>
 
         <!-- Match the Spring Cloud release train used by spring-base-parent. -->
-        <spring-cloud.version>2025.0.3</spring-cloud.version>
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies/versions -->
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -61,16 +60,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -101,13 +96,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -131,6 +121,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>${fmt-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>${maven-source-plugin.version}</version>
@@ -153,8 +155,7 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.hibernate.orm</groupId>
-                            <artifactId>hibernate-jpamodelgen</artifactId>
-                            <version>${hibernate.version}</version>
+                            <artifactId>hibernate-processor</artifactId>
                         </path>
                         <path>
                             <groupId>io.github.openfeign.querydsl</groupId>
