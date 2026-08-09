@@ -1,29 +1,29 @@
 package com.vulinh.utils;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonInclude.Value;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.core.util.DefaultIndenter;
+import tools.jackson.core.util.DefaultPrettyPrinter;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
- * Convenient but opinionated utility class that provides JSON-related utility methods via the
- * {@link ObjectMapper} class. It, in theory, mimics the Spring Boot's default {@link ObjectMapper}
- * instance.
+ * Convenient, opinionated JSON utility methods backed by a shared immutable Jackson 3 {@link
+ * JsonMapper}.
  *
- * <p>The underlying mapper is pre-configured with:
+ * <p>The mapper retains the following Jackson 3 defaults:
  *
  * <ul>
- *   <li>{@link SerializationFeature#WRITE_DATES_AS_TIMESTAMPS} disabled (ISO-8601 date strings)
- *   <li>{@link DeserializationFeature#FAIL_ON_UNKNOWN_PROPERTIES} disabled
- *   <li>{@link MapperFeature#DEFAULT_VIEW_INCLUSION} disabled
- *   <li>{@link com.fasterxml.jackson.datatype.jsr310.JavaTimeModule} registered
- *   <li>{@link com.fasterxml.jackson.annotation.JsonInclude.Include#NON_NULL} serialization
- *       inclusion
+ *   <li>Java Time values are serialized as ISO-8601 strings rather than timestamps.
+ *   <li>Unknown input properties are ignored during deserialization.
+ *   <li>Properties without an active JSON View are excluded when a view is used.
  * </ul>
+ *
+ * <p>Jackson 3 provides Java Time support directly in Databind; no separate module registration is
+ * required. This utility additionally omits null-valued properties during serialization. The mapper
+ * is immutable and thread-safe, so it is shared by every utility method.
  */
 public class JsonUtils {
 
@@ -35,8 +35,9 @@ public class JsonUtils {
   private JsonUtils() {}
 
   /**
-   * Return the {@link ObjectMapper} instance itself, for more advanced methods that this class
-   * didn't provide. Can also be used as the unmodifiable data mapper argument.
+   * Returns the immutable shared {@link ObjectMapper} for operations not exposed by this utility.
+   * The returned mapper is thread-safe and cannot be reconfigured; use {@link
+   * ObjectMapper#rebuild()} to derive a separately configured mapper.
    *
    * @return The {@link ObjectMapper} instance.
    */
@@ -49,7 +50,7 @@ public class JsonUtils {
    *
    * @param object the object to serialize
    * @return the compact JSON string representation
-   * @throws IllegalArgumentException if serialization fails
+   * @throws IllegalArgumentException if Jackson cannot serialize the value
    */
   public static String toMinimizedJSON(Object object) {
     return toJSONString(object, PrintType.PLAIN);
@@ -60,7 +61,7 @@ public class JsonUtils {
    *
    * @param object the object to serialize
    * @return the pretty-printed JSON string representation
-   * @throws IllegalArgumentException if serialization fails
+   * @throws IllegalArgumentException if Jackson cannot serialize the value
    */
   public static String toPrettyJSON(Object object) {
     return toJSONString(object, PrintType.PRETTY);
@@ -73,12 +74,12 @@ public class JsonUtils {
    * @param clazz the target class
    * @param <T> the target type
    * @return the deserialized object
-   * @throws IllegalArgumentException if deserialization fails
+   * @throws IllegalArgumentException if Jackson cannot deserialize the JSON
    */
   public static <T> T toObject(String message, Class<T> clazz) {
     try {
       return MAPPER.readValue(message, clazz);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalArgumentException("JSON deserialization error", e);
     }
   }
@@ -92,12 +93,12 @@ public class JsonUtils {
    * @param type the {@link TypeReference} describing the target type
    * @param <T> the target type
    * @return the deserialized object
-   * @throws IllegalArgumentException if deserialization fails
+   * @throws IllegalArgumentException if Jackson cannot deserialize the JSON
    */
   public static <T> T toObject(String message, TypeReference<T> type) {
     try {
       return MAPPER.readValue(message, type);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalArgumentException("JSON deserialization error", e);
     }
   }
@@ -108,7 +109,7 @@ public class JsonUtils {
         case PLAIN -> MAPPER.writeValueAsString(object);
         case PRETTY -> PRETTY_WRITER.writeValueAsString(object);
       };
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalArgumentException("JSON serialization error", e);
     }
   }
@@ -118,18 +119,14 @@ public class JsonUtils {
 
   static {
     MAPPER =
-        JsonMapper.builder()
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
-            .addModule(new JavaTimeModule())
-            .serializationInclusion(Include.NON_NULL)
-            .build();
+        JsonMapper.builder().changeDefaultPropertyInclusion(ignored -> Value.ALL_NON_NULL).build();
 
     PRETTY_WRITER =
-        MAPPER.writer(
-            new DefaultPrettyPrinter()
-                .withObjectIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE)
-                .withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE));
+        MAPPER
+            .writer()
+            .with(
+                new DefaultPrettyPrinter()
+                    .withObjectIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE)
+                    .withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE));
   }
 }
