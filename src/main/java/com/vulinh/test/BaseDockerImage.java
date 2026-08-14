@@ -2,8 +2,11 @@ package com.vulinh.test;
 
 import org.testcontainers.utility.DockerImageName;
 
-/** Shared Docker image definitions used by the ecosystem's integration-test support. */
-final class BaseDockerImage {
+/**
+ * Shared Docker image definitions used by the ecosystem's integration-test support. Public to be
+ * reusable
+ */
+public final class BaseDockerImage {
 
   public static final DockerImageName POSTGRESQL_IMAGE =
       DockerImageName.parse("postgres:18.3-alpine3.23");
