@@ -5,7 +5,7 @@
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base-commons</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
 
     <name>spring-base-commons</name>
 
@@ -16,11 +16,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <maven.compiler.release>${java.version}</maven.compiler.release>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin/versions -->
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+
+        <!-- https://mvnrepository.com/artifact/com.spotify.fmt/fmt-maven-plugin/versions -->
         <fmt-maven-plugin.version>2.29</fmt-maven-plugin.version>
 
         <!-- https://mvnrepository.com/artifact/io.github.openfeign.querydsl/querydsl-core/versions -->
-        <openfeign.querydsl.version>7.5</openfeign.querydsl.version>
+        <openfeign.querydsl.version>7.6</openfeign.querydsl.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -29,7 +33,7 @@
         <p6spy.version>3.9.1</p6spy.version>
 
         <!-- Imported as a BOM below to compile against a tested Spring ecosystem baseline. -->
-        <spring-boot.version>4.1.0</spring-boot.version>
+        <spring-boot.version>4.1.1</spring-boot.version>
 
         <!-- Match the Spring Cloud release train used by spring-base-parent. -->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies/versions -->
