@@ -9,10 +9,10 @@ import org.testcontainers.utility.DockerImageName;
 public final class BaseDockerImage {
 
   public static final DockerImageName POSTGRESQL_IMAGE =
-      DockerImageName.parse("postgres:18.3-alpine3.23");
+      DockerImageName.parse("postgres:18.6-alpine3.24");
 
   public static final DockerImageName RABBITMQ_IMAGE =
-      DockerImageName.parse("rabbitmq:4.2.4-alpine");
+      DockerImageName.parse("rabbitmq:4.4.0-alpine");
 
   private BaseDockerImage() {
     // Utility class
