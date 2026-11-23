@@ -35,7 +35,8 @@ class JsonUtilsTest {
 
     assertEquals(
         """
-        {"name":"Alice","age":30}""",
+        {"name":"Alice","age":30}\
+        """,
         json);
   }
 
@@ -54,7 +55,8 @@ class JsonUtilsTest {
   void testToObjectWithClassShouldDeserialize() {
     var json =
         """
-        {"name":"Bob","age":25}""";
+        {"name":"Bob","age":25}
+        """;
 
     var result = JsonUtils.toObject(json, SampleObject.class);
 
@@ -66,7 +68,8 @@ class JsonUtilsTest {
   void testToObjectWithTypeReferenceShouldDeserialize() {
     var json =
         """
-        [{"name":"Alice","age":30},{"name":"Bob","age":25}]""";
+        [{"name":"Alice","age":30},{"name":"Bob","age":25}]
+        """;
 
     List<SampleObject> result = JsonUtils.toObject(json, new TypeReference<>() {});
 
@@ -120,7 +123,8 @@ class JsonUtilsTest {
     assertFalse(json.contains("nickname"), "Null fields should not appear in JSON");
     assertEquals(
         """
-            {"name":"Alice"}""",
+        {"name":"Alice"}\
+        """,
         json);
   }
 
@@ -153,7 +157,8 @@ class JsonUtilsTest {
   void testUnknownPropertiesShouldBeIgnored() {
     var json =
         """
-        {"name":"Alice","age":30,"unknownField":"value"}""";
+        {"name":"Alice","age":30,"unknownField":"value"}
+        """;
 
     var result = assertDoesNotThrow(() -> JsonUtils.toObject(json, ObjectWithExtra.class));
 
@@ -185,7 +190,8 @@ class JsonUtilsTest {
   void testToObjectWithTypeReferenceShouldDeserializeMap() {
     var json =
         """
-        {"key1":"value1","key2":"value2"}""";
+        {"key1":"value1","key2":"value2"}
+        """;
 
     Map<String, String> result = JsonUtils.toObject(json, new TypeReference<>() {});
 

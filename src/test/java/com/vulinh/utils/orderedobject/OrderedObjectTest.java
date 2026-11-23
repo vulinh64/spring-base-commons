@@ -98,29 +98,27 @@ class OrderedObjectTest {
   @Test
   @DisplayName("Luckily sort a list that contains no element with one of its field null")
   void noThrowWhenUsingNullHostile() {
-    assertDoesNotThrow(
-        () -> {
-          var testList = new ArrayList<>(TEST_LIST);
+    assertDoesNotThrow(() -> {
+      var testList = new ArrayList<>(TEST_LIST);
 
-          testList.removeFirst();
+      testList.removeFirst();
 
-          IntStream.range(0, testList.size())
-              .mapToObj(indices -> Wrapper.wrap(testList.get(indices), indices))
-              .sorted(
-                  Wrapper.firstCompareBy(
-                      TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE))
-              .map(OrderedObject::unwrap)
-              .toList();
-        });
+      IntStream.range(0, testList.size())
+          .mapToObj(indices -> Wrapper.wrap(testList.get(indices), indices))
+          .sorted(
+              Wrapper.firstCompareBy(
+                  TestUser::name, SortingOrder.ASCENDING, NullsOrder.NULLS_HOSTILE))
+          .map(OrderedObject::unwrap)
+          .toList();
+    });
 
-    assertDoesNotThrow(
-        () -> {
-          Wrapper.toSortedList(
-              Collections.emptyList(),
-              TestUser::name,
-              SortingOrder.DESCENDING,
-              NullsOrder.NULLS_HOSTILE);
-        });
+    assertDoesNotThrow(() -> {
+      Wrapper.toSortedList(
+          Collections.emptyList(),
+          TestUser::name,
+          SortingOrder.DESCENDING,
+          NullsOrder.NULLS_HOSTILE);
+    });
   }
 
   static List<TestUser> buildResult(SortingOrder sortingOrder, NullsOrder nullsOrder) {

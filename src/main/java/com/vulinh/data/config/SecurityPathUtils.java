@@ -58,9 +58,8 @@ public final class SecurityPathUtils {
    */
   public static HttpSecurity baseStateless(HttpSecurity http, RequestMatcher matcher) {
     return http.securityMatcher(matcher)
-        .sessionManagement(
-            sessionManagementConfigurer ->
-                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        .sessionManagement(sessionManagementConfigurer ->
+            sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
   }
 
   private static RequestMatcher specificUrl(

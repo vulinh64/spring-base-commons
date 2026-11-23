@@ -35,20 +35,19 @@ public final class LocalizationSupport {
   private static List<String> loadBundleNames() {
     var names =
         ServiceLoader.load(LocalizationBundleProvider.class).stream()
-            .<String>mapMulti(
-                (provider, downstream) -> {
-                  var bundleNames = provider.get().bundleNames();
+            .<String>mapMulti((provider, downstream) -> {
+              var bundleNames = provider.get().bundleNames();
 
-                  if (bundleNames == null) {
-                    return;
-                  }
+              if (bundleNames == null) {
+                return;
+              }
 
-                  for (var bundleName : bundleNames) {
-                    if (StringUtils.isNotBlank(bundleName)) {
-                      downstream.accept(bundleName);
-                    }
-                  }
-                })
+              for (var bundleName : bundleNames) {
+                if (StringUtils.isNotBlank(bundleName)) {
+                  downstream.accept(bundleName);
+                }
+              }
+            })
             .distinct()
             .toList();
 

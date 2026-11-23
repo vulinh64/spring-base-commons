@@ -61,14 +61,12 @@ public class ExecutionTimeAspect {
         .setMessage("Execution time of method {}.{}({}) is {} ms ({} ns) (from {} to {})")
         .addArgument(signature.getDeclaringTypeName())
         .addArgument(signature.getName())
-        .addArgument(
-            () ->
-                Arrays.stream(joinPoint.getArgs())
-                    .<String>mapMulti(
-                        (argument, downstream) ->
-                            downstream.accept(
-                                argument == null ? "null" : argument.getClass().getSimpleName()))
-                    .collect(Collectors.joining(CommonUtils.COMMA)))
+        .addArgument(() ->
+            Arrays.stream(joinPoint.getArgs())
+                .<String>mapMulti((argument, downstream) ->
+                    downstream.accept(
+                        argument == null ? "null" : argument.getClass().getSimpleName()))
+                .collect(Collectors.joining(CommonUtils.COMMA)))
         .addArgument(() -> Duration.between(startedTimestamp, stoppedTimestamp).toMillis())
         .addArgument(() -> Duration.between(startedTimestamp, stoppedTimestamp).toNanos())
         .addArgument(() -> toLocalDateTime(startedTimestamp))
