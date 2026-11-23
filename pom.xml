@@ -5,7 +5,7 @@
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base-commons</artifactId>
-    <version>4.0.4</version>
+    <version>4.0.5</version>
 
     <name>spring-base-commons</name>
 
@@ -17,6 +17,9 @@
 
         <maven.compiler.release>${java.version}</maven.compiler.release>
 
+        <!-- Imported as a BOM below to compile against a tested Spring ecosystem baseline. -->
+        <spring-boot.version>4.1.3</spring-boot.version>
+
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin/versions -->
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 
@@ -27,17 +30,14 @@
         <openfeign.querydsl.version>7.7</openfeign.querydsl.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
-        <commons-lang3.version>3.21.0</commons-lang3.version>
+        <commons-lang3.version>3.22.0</commons-lang3.version>
 
         <!-- https://mvnrepository.com/artifact/p6spy/p6spy/versions -->
         <p6spy.version>3.9.1</p6spy.version>
 
-        <!-- Imported as a BOM below to compile against a tested Spring ecosystem baseline. -->
-        <spring-boot.version>4.1.2</spring-boot.version>
-
         <!-- Match the Spring Cloud release train used by spring-base-parent. -->
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies/versions -->
-        <spring-cloud.version>2025.1.4</spring-cloud.version>
+        <spring-cloud.version>2025.1.5</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
